@@ -10,7 +10,7 @@ import java.time.Instant
 data class Review(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val id: java.util.UUID,
     val rating: Int,
     val text: String,
     val createdAt: Instant,

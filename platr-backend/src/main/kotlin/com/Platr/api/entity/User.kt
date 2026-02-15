@@ -5,13 +5,15 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import java.time.Instant
+import java.util.UUID
 
 @Entity(name = "users")
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
+    val uid: UUID,
     val username: String,
     val email: String,
     val hashedPassword: String,
@@ -20,6 +22,8 @@ data class User(
     val createdAt: Instant,
     val updatedAt: Instant,
 
-//    val recipes: List<Recipe>,
-//    val mealPlans: List<MealPlan>
+    @OneToMany(mappedBy = "owner")
+    val recipes: MutableList<Recipe>,
+    @OneToMany(mappedBy = "owner")
+    val mealPlans: MutableList<MealPlan>
 )

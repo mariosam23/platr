@@ -1,5 +1,6 @@
 package com.Platr.api.entity
 
-data class RecipeIngredient(
-
-)
+// TODO: Implement RecipeIngredient entity
+// data class RecipeIngredient(
+//
+// )
