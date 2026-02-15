@@ -1,6 +1,5 @@
 package com.Platr.api.entity
 
-import com.Platr.api.dto.UserResponseDto
 import com.Platr.api.enums.Role
 import jakarta.persistence.CascadeType
 import jakarta.persistence.CollectionTable
@@ -39,7 +38,7 @@ class User(
     @field:NotBlank
     var email: String,
 
-    var hashedPassword: String,
+    var hashedPassword: String?,
     var displayedName: String,
 
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
@@ -56,14 +55,3 @@ class User(
     @OneToMany(mappedBy = "owner", cascade = [CascadeType.ALL], orphanRemoval = true)
     val reviews: MutableList<Review> = mutableListOf()
 ) : AuditedEntity()
-
-fun User.toResponseDto() = UserResponseDto(
-    userId = this.userId!!,
-    username = this.username,
-    email = this.email,
-    displayedName = this.displayedName,
-    roles = this.roles,
-    recipesCount = this.recipes.size,
-    mealPlansCount = this.mealPlans.size,
-    createdAt = this.createdAt,
-)
