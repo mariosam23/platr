@@ -1,27 +1,37 @@
 package com.Platr.api.entity
 
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import java.time.Instant
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
+import jakarta.validation.constraints.FutureOrPresent
 import java.time.LocalDate
 import java.util.UUID
 
-@Entity(name = "meal_plans")
-data class MealPlan(
+@Entity
+@Table(name = "meal_plans")
+class MealPlan(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID,
-    val weekStart: LocalDate,
-    val notes: String,
-    val createdAt: Instant,
-    val updatedAt: Instant,
+    @Column(name = "meal_plan_id")
+    var mealPlanId: UUID? = null,
 
-    @ManyToOne
-    @JoinColumn(name = "uid", nullable = false)
-    val owner: User,
-//    val recipes: List<Recipe>,
-)
+    @field:FutureOrPresent
+    var weekStart: LocalDate,
+
+    var notes: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var owner: User,
+
+    @OneToMany(mappedBy = "mealPlan", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val mealPlanRecipes: MutableList<MealPlanRecipe> = mutableListOf(),
+) : AuditedEntity()

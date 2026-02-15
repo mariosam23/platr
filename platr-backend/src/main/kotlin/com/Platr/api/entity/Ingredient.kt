@@ -1,18 +1,26 @@
 package com.Platr.api.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import java.time.Instant
+import jakarta.persistence.Table
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
+import java.util.UUID
 
-@Entity(name = "ingredients")
-data class Ingredient(
+@Entity
+@Table(name = "ingredients")
+class Ingredient(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: Long,
-    val name: String,
-    val unitHint: String?, // ml, g, kg,
-    val createdAt: Instant,
-    val updatedAt: Instant
-)
+    @Column(name = "ingredient_id")
+    var ingredientId: UUID? = null,
+
+    @field:NotBlank(message = "Name can not be blank")
+    @field:Size(min = 1, max = 50)
+    var name: String,
+
+    var unitHint: String?, // ml, g, kg,
+) : AuditedEntity()

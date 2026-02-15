@@ -1,20 +1,39 @@
 package com.Platr.api.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import java.time.Instant
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import java.util.UUID
 
-@Entity(name = "reviews")
-data class Review(
+@Entity
+@Table(name = "reviews")
+class Review(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: java.util.UUID,
-    val rating: Int,
-    val text: String,
-    val createdAt: Instant,
+    @Column(name = "review_id")
+    var reviewId: UUID? = null,
 
-//    val author: User,
-//    val recipe: Recipe
-)
+    @field:Min(1)
+    @field:Max(5)
+    var rating: Int,
+
+    @field:NotBlank
+    var text: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var owner: User,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id", nullable = false)
+    var recipe: Recipe,
+) : AuditedEntity()
