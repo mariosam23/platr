@@ -32,6 +32,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
 	implementation("tools.jackson.module:jackson-module-kotlin")
+	implementation("org.modelmapper:modelmapper:3.2.6")
 	runtimeOnly("org.postgresql:postgresql")
 
 	testRuntimeOnly("com.h2database:h2")
