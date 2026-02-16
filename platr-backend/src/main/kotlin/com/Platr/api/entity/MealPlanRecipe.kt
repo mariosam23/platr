@@ -28,4 +28,12 @@ class MealPlanRecipe(
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var dayOfWeek: DayOfWeek
-)
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MealPlanRecipe) return false
+        return mealPlanRecipeId != null && mealPlanRecipeId == other.mealPlanRecipeId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

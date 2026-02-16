@@ -24,6 +24,14 @@ class Category(
     @Enumerated(EnumType.STRING)
     var categoryType: CategoryType,
 
-    @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     val recipes: MutableList<RecipeCategory> = mutableListOf(),
-) : AuditedEntity()
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Category) return false
+        return categoryId != null && categoryId == other.categoryId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

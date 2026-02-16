@@ -23,4 +23,12 @@ class Ingredient(
     var name: String,
 
     var unitHint: String?, // ml, g, kg,
-) : AuditedEntity()
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Ingredient) return false
+        return ingredientId != null && ingredientId == other.ingredientId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

@@ -34,4 +34,12 @@ class MealPlan(
 
     @OneToMany(mappedBy = "mealPlan", cascade = [CascadeType.ALL], orphanRemoval = true)
     val mealPlanRecipes: MutableList<MealPlanRecipe> = mutableListOf(),
-) : AuditedEntity()
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MealPlan) return false
+        return mealPlanId != null && mealPlanId == other.mealPlanId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

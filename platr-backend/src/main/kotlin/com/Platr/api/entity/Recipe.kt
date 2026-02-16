@@ -60,4 +60,12 @@ class Recipe(
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true)
     val categories: MutableList<RecipeCategory> = mutableListOf()
-) : AuditedEntity()
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Recipe) return false
+        return recipeId != null && recipeId == other.recipeId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

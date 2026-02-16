@@ -11,8 +11,5 @@ data class UserResponseDto(
     val displayedName: String,
     val roles: Set<Role>,
 
-    val recipesCount: Int,
-    val mealPlansCount: Int,
-
     val createdAt: Instant?,
 )

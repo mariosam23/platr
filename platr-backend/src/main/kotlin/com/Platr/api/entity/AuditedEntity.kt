@@ -19,4 +19,3 @@ abstract class AuditedEntity(
     @Column(name = "updated_at", nullable = false)
     open var updatedAt: Instant = Instant.EPOCH,
 )
-

@@ -36,4 +36,12 @@ class Review(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", nullable = false)
     var recipe: Recipe,
-) : AuditedEntity()
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Review) return false
+        return reviewId != null && reviewId == other.reviewId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

@@ -38,7 +38,7 @@ class User(
     @field:NotBlank
     var email: String,
 
-    var hashedPassword: String?,
+    var hashedPassword: String,
     var displayedName: String,
 
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
@@ -46,12 +46,20 @@ class User(
     @Enumerated(EnumType.STRING)
     var roles: Set<Role>,
 
-    @OneToMany(mappedBy = "owner", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     val recipes: MutableList<Recipe> = mutableListOf(),
 
-    @OneToMany(mappedBy = "owner", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     val mealPlans: MutableList<MealPlan> = mutableListOf(),
 
-    @OneToMany(mappedBy = "owner", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     val reviews: MutableList<Review> = mutableListOf()
-) : AuditedEntity()
+) : AuditedEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is User) return false
+        return userId != null && userId == other.userId
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+}

@@ -24,4 +24,12 @@ class RecipeIngredient(
 
     @Column(length = 20)
     var unit: String?
-)
+) : AuditedEntity() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is RecipeIngredient) return false
+            return recipeIngredientId != null && recipeIngredientId == other.recipeIngredientId
+        }
+
+        override fun hashCode(): Int = javaClass.hashCode()
+}

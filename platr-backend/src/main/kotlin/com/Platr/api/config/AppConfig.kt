@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 @Configuration
 @EnableConfigurationProperties(JwtConfig::class)
-class Configuration {
+class AppConfig {
     @Bean
     fun encoder(): PasswordEncoder = BCryptPasswordEncoder()
 }

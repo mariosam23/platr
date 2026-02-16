@@ -6,10 +6,6 @@ plugins {
 	kotlin("plugin.jpa") version "2.2.21"
 }
 
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
-description = "Demo project for Spring Boot"
-
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(23)
@@ -32,7 +28,6 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
 	implementation("tools.jackson.module:jackson-module-kotlin")
-	implementation("org.modelmapper:modelmapper:3.2.6")
 	runtimeOnly("org.postgresql:postgresql")
 
 	testRuntimeOnly("com.h2database:h2")
