@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import com.Platr.api.dto.toResponseDto
+import com.Platr.api.exception.UserNotFoundException
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.UUID
 
@@ -29,8 +30,7 @@ class UserController(
     @GetMapping("/{uuid}")
     fun findByUUID(@PathVariable uuid: UUID): UserResponseDto {
         return userService.findById(uuid)
-            ?.toResponseDto()
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.")
+            .toResponseDto()
     }
 
     @PreAuthorize("hasRole('ADMIN') or #uuid == authentication.principal.id")

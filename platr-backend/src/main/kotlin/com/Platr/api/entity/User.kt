@@ -37,7 +37,7 @@ class User(
     @Column(nullable = false, length = 50)
     var displayedName: String,
 
-    @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role::class, fetch = FetchType.LAZY)
     @CollectionTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")])
     @Enumerated(EnumType.STRING)
     var roles: Set<Role>,

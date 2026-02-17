@@ -42,8 +42,14 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun findById(id: UUID): User? {
-        return userRepository.findById(id).orElse(null)
+    fun findById(id: UUID): User {
+        if (!userRepository.existsById(id)) {
+            logger.warn("User with id $id not found")
+            throw UserNotFoundException("User with id $id not found")
+        }
+
+        logger.info("Finding user with id: $id")
+        return userRepository.findById(id).get()
     }
 
     @Transactional(readOnly = true)

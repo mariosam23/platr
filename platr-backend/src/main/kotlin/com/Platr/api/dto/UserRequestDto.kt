@@ -18,5 +18,6 @@ data class UserRequestDto(
     val password: String,
 
     @field:NotBlank(message = "Display name is required")
+    @field:Size(min = 3, max = 50, message = "Display name must be between 3 and 50 chars")
     val displayedName: String
 )

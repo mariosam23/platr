@@ -33,16 +33,21 @@ class JwtAuthenticationFilter(
         val username = tokenService.extractUsername(jwt)
 
         if (username != null && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = this.userDetailsService.loadUserByUsername(username)
+            try {
+                val userDetails = this.userDetailsService.loadUserByUsername(username)
 
-            if (tokenService.isValid(jwt, userDetails, "access")) {
-                val authToken = UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.authorities
-                )
-                authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authToken
+                if (tokenService.isValid(jwt, userDetails, "access")) {
+                    val authToken = UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.authorities
+                    )
+                    authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authToken
+                }
+            } catch (e: Exception) {
+                // Log the exception and continue without setting authentication
+                logger.warn("JWT validation failed: ${e.message}")
             }
         }
         filterChain.doFilter(request, response)

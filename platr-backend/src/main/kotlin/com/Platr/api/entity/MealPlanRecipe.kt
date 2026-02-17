@@ -7,7 +7,7 @@ import java.time.DayOfWeek
 import java.util.UUID
 
 @Entity
-@Table(name = "meal_plan_recipes")
+@Table(name = "meal_plan_recipes", uniqueConstraints = [UniqueConstraint(columnNames = ["meal_plan_id", "meal_type", "day_of_week"])])
 class MealPlanRecipe(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

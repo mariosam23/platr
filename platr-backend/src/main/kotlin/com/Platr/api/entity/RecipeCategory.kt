@@ -5,7 +5,7 @@ import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
-@Table(name = "recipe_categories")
+@Table(name = "recipe_categories", uniqueConstraints = [UniqueConstraint(columnNames = ["recipe_id", "category_id"])])
 class RecipeCategory(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
