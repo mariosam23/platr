@@ -4,6 +4,7 @@ import com.Platr.api.dto.AuthResponse
 import com.Platr.api.dto.LoginRequest
 import com.Platr.api.dto.UserRequestDto
 import com.Platr.api.enums.Role
+import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
@@ -26,6 +27,7 @@ class AuthService(
         private val logger = LoggerFactory.getLogger(AuthService::class.java)
     }
 
+    @Transactional
     fun register(userRequest: UserRequestDto): AuthResponse {
         val userToCreate = userRequest.toUser(passwordEncoder)
         userService.createUser(userToCreate)
@@ -38,6 +40,7 @@ class AuthService(
         return AuthResponse(accessToken, refreshToken)
     }
 
+    @Transactional
     fun login(request: LoginRequest): AuthResponse {
         try {
             authenticationManager.authenticate(
@@ -56,14 +59,7 @@ class AuthService(
         return AuthResponse(accessToken, refreshToken)
     }
 
-    private fun UserRequestDto.toUser(passwordEncoder: PasswordEncoder) = com.Platr.api.entity.User(
-        username = this.username,
-        email = this.email,
-        hashedPassword = passwordEncoder.encode(this.password) ?: throw IllegalStateException("Failed to encode password"),
-        displayedName = this.displayedName,
-        roles = setOf<Role>(Role.USER)
-    )
-
+    @Transactional
     fun refresh(refreshToken: String): AuthResponse {
         val username = tokenService.extractUsername(refreshToken)
             ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token claims")
@@ -79,4 +75,12 @@ class AuthService(
 
         return AuthResponse(newAccessToken, newRefreshToken)
     }
+
+    private fun UserRequestDto.toUser(passwordEncoder: PasswordEncoder) = com.Platr.api.entity.User(
+        username = this.username,
+        email = this.email,
+        hashedPassword = passwordEncoder.encode(this.password) ?: throw IllegalStateException("Failed to encode password"),
+        displayedName = this.displayedName,
+        roles = setOf<Role>(Role.USER)
+    )
 }

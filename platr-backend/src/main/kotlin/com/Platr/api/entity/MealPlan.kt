@@ -1,5 +1,6 @@
 package com.Platr.api.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -11,7 +12,6 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import jakarta.validation.constraints.FutureOrPresent
 import java.time.LocalDate
 import java.util.UUID
 
@@ -23,11 +23,13 @@ class MealPlan(
     @Column(name = "meal_plan_id")
     var mealPlanId: UUID? = null,
 
-    @field:FutureOrPresent
+    @Column(nullable = false)
     var weekStart: LocalDate,
 
+    @Column(nullable = false, length = 1000)
     var notes: String,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     var owner: User,

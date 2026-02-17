@@ -1,5 +1,6 @@
 package com.Platr.api.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -9,9 +10,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import jakarta.validation.constraints.Max
-import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.NotBlank
 import java.util.UUID
 
 @Entity
@@ -22,17 +20,18 @@ class Review(
     @Column(name = "review_id")
     var reviewId: UUID? = null,
 
-    @field:Min(1)
-    @field:Max(5)
+    @Column(nullable = false)
     var rating: Int,
 
-    @field:NotBlank
+    @Column(nullable = false, length = 1000)
     var text: String,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     var owner: User,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", nullable = false)
     var recipe: Recipe,

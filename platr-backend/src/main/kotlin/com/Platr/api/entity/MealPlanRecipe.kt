@@ -1,6 +1,7 @@
 package com.Platr.api.entity
 
 import com.Platr.api.enums.MealType
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import java.time.DayOfWeek
 import java.util.UUID
@@ -13,10 +14,12 @@ class MealPlanRecipe(
     @Column(name = "meal_plan_recipe_id")
     var mealPlanRecipeId: UUID? = null,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meal_plan_id", nullable = false)
     var mealPlan: MealPlan,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", nullable = false)
     var recipe: Recipe,

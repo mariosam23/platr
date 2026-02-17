@@ -1,5 +1,6 @@
 package com.Platr.api.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 import java.util.UUID
 
@@ -11,10 +12,12 @@ class RecipeIngredient(
     @Column(name = "recipe_ingredient_id")
     var recipeIngredientId: UUID? = null,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", nullable = false)
     var recipe: Recipe,
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
     var ingredient: Ingredient,

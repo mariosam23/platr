@@ -1,15 +1,18 @@
 package com.Platr.api.service
 
+import com.Platr.api.dto.UserResponseDto
 import com.Platr.api.entity.User
 import com.Platr.api.exception.UserNotFoundException
 import com.Platr.api.exception.UserAlreadyExistsException
 import com.Platr.api.repository.UserRepository
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.ResponseStatus
+import java.beans.BeanProperty
 import java.util.UUID
 
 @Service
@@ -49,7 +52,6 @@ class UserService(
     }
 
     @Transactional
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteById(id: UUID) {
         if (!userRepository.existsById(id)) {
             throw UserNotFoundException("User with id $id not found")

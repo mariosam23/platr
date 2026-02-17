@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.Date
+import kotlin.math.log
 
 @Service
 class TokenService(
@@ -50,9 +51,8 @@ class TokenService(
     fun isValid(token: String, userDetails: UserDetails, type: String): Boolean {
         val claims = getAllClaims(token) ?: return false
         if (claims["type"] != type) return false
-        val username = extractUsername(token) ?: return false
-
-        return username == userDetails.username && !isExpired(token)
+        val username = claims.subject ?: return false
+        return username == userDetails.username && !claims.expiration.before(Date())
     }
 
     private fun isExpired(token: String): Boolean {
@@ -64,6 +64,7 @@ class TokenService(
         return try {
             getAllClaims(token)?.subject
         } catch (e: Exception) {
+            logger.error("Failed to extract username from token: ${e.message}")
             null // if extraction fails
         }
     }
@@ -76,8 +77,10 @@ class TokenService(
                 .parseSignedClaims(token)
                 .payload
         } catch (e: JwtException) {
+            logger.error("JWT parsing error: ${e.message}")
             null // Handles expired, malformed, or invalid signature tokens
         } catch (e: IllegalArgumentException) {
+            logger.error("Invalid token argument: ${e.message}")
             null
         }
     }

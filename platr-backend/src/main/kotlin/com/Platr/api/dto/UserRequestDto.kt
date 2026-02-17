@@ -1,6 +1,5 @@
 package com.Platr.api.dto
 
-import com.Platr.api.entity.User
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -15,7 +14,7 @@ data class UserRequestDto(
     val email: String,
 
     @field:NotBlank(message = "Password is required")
-    @field:Size(min = 8, message = "Password must be at least 8 characters")
+    @field:Size(min = 8, max = 72, message = "Password must be at least 8 characters")
     val password: String,
 
     @field:NotBlank(message = "Display name is required")

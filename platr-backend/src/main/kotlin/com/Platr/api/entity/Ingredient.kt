@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Size
 import java.util.UUID
 
 @Entity
@@ -18,11 +16,11 @@ class Ingredient(
     @Column(name = "ingredient_id")
     var ingredientId: UUID? = null,
 
-    @field:NotBlank(message = "Name can not be blank")
-    @field:Size(min = 1, max = 50)
+    @Column(nullable = false, length = 50)
     var name: String,
 
-    var unitHint: String?, // ml, g, kg,
+    @Column(length = 20)
+    var unitHint: String?,
 ) : AuditedEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

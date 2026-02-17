@@ -15,9 +15,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Size
 import java.util.UUID
 
 @Entity
@@ -29,16 +26,15 @@ class User(
     var userId: UUID? = null,
 
     @Column(nullable = false, unique = true, length = 50)
-    @field:NotBlank
-    @field:Size(min = 3, max = 50)
     var username: String,
 
-    @Column(nullable = false, unique = true)
-    @field:Email(message = "Invalid email format")
-    @field:NotBlank
+    @Column(nullable = false, unique = true, length = 255)
     var email: String,
 
+    @Column(nullable = false)
     var hashedPassword: String,
+
+    @Column(nullable = false, length = 50)
     var displayedName: String,
 
     @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
