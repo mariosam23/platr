@@ -15,4 +15,12 @@ interface UserRepository : JpaRepository<User, UUID> {
     @EntityGraph(attributePaths = ["roles"])
     @Query("SELECT u FROM User u WHERE u.email = :email")
     fun findUserByEmailWithRoles(@Param("email") email: String): User?
+
+    @EntityGraph(attributePaths = ["roles"])
+    @Query("SELECT u FROM User u WHERE u.userId = :id")
+    fun findByIdWithRoles(@Param("id") id: UUID): User?
+
+    @EntityGraph(attributePaths = ["roles"])
+    @Query("SELECT u FROM User u")
+    fun findAllWithRoles(): List<User>
 }
