@@ -1,6 +1,9 @@
 package com.Platr.api.dto
 
+
 data class AuthResponse(
-    val accessToken: String,
-    val refreshToken: String
+    val jwtToken: String,
+    val refreshToken: String,
+    val username: String,
+    val role: String,
 )

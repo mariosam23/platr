@@ -2,7 +2,8 @@ package com.Platr.api.service
 
 import com.Platr.api.dto.AuthResponse
 import com.Platr.api.dto.LoginRequest
-import com.Platr.api.dto.UserRequestDto
+import com.Platr.api.dto.RegisterRequest
+import com.Platr.api.dto.toUser
 import com.Platr.api.enums.Role
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -28,7 +30,7 @@ class AuthService(
     }
 
     @Transactional
-    fun register(userRequest: UserRequestDto): AuthResponse {
+    fun register(userRequest: RegisterRequest): AuthResponse {
         val userToCreate = userRequest.toUser(passwordEncoder)
         userService.createUser(userToCreate)
 
@@ -37,7 +39,12 @@ class AuthService(
         val refreshToken = tokenService.generateRefreshToken(userDetails)
 
         logger.info("New user registered: ${userRequest.email}")
-        return AuthResponse(accessToken, refreshToken)
+        return AuthResponse(
+            jwtToken = accessToken,
+            refreshToken = refreshToken,
+            username = userToCreate.username,
+            role = resolvePrimaryRole(userDetails.authorities),
+        )
     }
 
     @Transactional
@@ -54,9 +61,15 @@ class AuthService(
         val userDetails = userDetailsService.loadUserByUsername(request.email)
         val accessToken = tokenService.generateAccessToken(userDetails)
         val refreshToken = tokenService.generateRefreshToken(userDetails)
+        val user = userService.findByEmail(request.email)
 
         logger.info("User logged in: ${request.email}")
-        return AuthResponse(accessToken, refreshToken)
+        return AuthResponse(
+            jwtToken = accessToken,
+            refreshToken = refreshToken,
+            username = user?.username ?: userDetails.username,
+            role = resolvePrimaryRole(userDetails.authorities),
+        )
     }
 
     @Transactional
@@ -72,15 +85,20 @@ class AuthService(
 
         val newAccessToken = tokenService.generateAccessToken(userDetails)
         val newRefreshToken = tokenService.generateRefreshToken(userDetails)
+        val user = userService.findByEmail(username)
 
-        return AuthResponse(newAccessToken, newRefreshToken)
+        return AuthResponse(
+            jwtToken = newAccessToken,
+            refreshToken = newRefreshToken,
+            username = user?.username ?: userDetails.username,
+            role = resolvePrimaryRole(userDetails.authorities),
+        )
     }
 
-    private fun UserRequestDto.toUser(passwordEncoder: PasswordEncoder) = com.Platr.api.entity.User(
-        username = this.username,
-        email = this.email,
-        hashedPassword = passwordEncoder.encode(this.password) ?: throw IllegalStateException("Failed to encode password"),
-        displayedName = this.displayedName,
-        roles = setOf<Role>(Role.USER)
-    )
+    private fun resolvePrimaryRole(authorities: Collection<GrantedAuthority>): String =
+        authorities
+            .firstOrNull()
+            ?.authority
+            ?.removePrefix("ROLE_")
+            ?: Role.USER.name
 }

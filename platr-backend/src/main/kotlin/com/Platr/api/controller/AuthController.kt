@@ -3,7 +3,7 @@ package com.Platr.api.controller
 import com.Platr.api.dto.AuthResponse
 import com.Platr.api.dto.LoginRequest
 import com.Platr.api.dto.RefreshTokenRequest
-import com.Platr.api.dto.UserRequestDto
+import com.Platr.api.dto.RegisterRequest
 import com.Platr.api.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -20,7 +20,7 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    fun register(@Valid @RequestBody request: UserRequestDto): ResponseEntity<AuthResponse> {
+    fun register(@Valid @RequestBody request: RegisterRequest): ResponseEntity<AuthResponse> {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request))
     }
 
