@@ -57,7 +57,7 @@ fun MealPlan.toMealPlanDto() = MealPlanDto(
     updatedAt = updatedAt,
 )
 
-private fun RecipeIngredient.toRecipeIngredientDto() = RecipeIngredientDto(
+fun RecipeIngredient.toRecipeIngredientDto() = RecipeIngredientDto(
     ingredientId = ingredient.ingredientId,
     ingredientName = ingredient.name,
     quantity = quantity,

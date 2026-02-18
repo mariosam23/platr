@@ -23,21 +23,21 @@ data class RecipeRequest(
     val prepTimeMinutes: Int,
 
     @field:NotNull(message = "Difficulty is required")
-    val difficulty: RecipeDifficulty,
+    var difficulty: RecipeDifficulty,
 
     val imageUrl: String? = null,
     val calories: Int? = null,
 
     @field:NotEmpty(message = "At least one ingredient is required")
     @field:Valid
-    val ingredients: List<RecipeIngredientRequest>,
+    val ingredients: MutableList<RecipeIngredientRequest>,
 
     val categoryIds: Set<UUID> = emptySet(),
 )
 
 data class RecipeIngredientRequest(
     @field:NotNull(message = "Ingredient id is required")
-    val ingredientId: UUID,
+    var ingredientId: UUID,
 
     @field:DecimalMin(value = "0.000001", message = "Ingredient quantity must be positive")
     val quantity: Double,

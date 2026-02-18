@@ -50,10 +50,10 @@ class Recipe(
     var owner: User,
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
-    val ingredients: MutableList<RecipeIngredient> = mutableListOf(),
+    var ingredients: MutableList<RecipeIngredient> = mutableListOf(),
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
-    val reviews: MutableList<Review> = mutableListOf(),
+    var reviews: MutableList<Review> = mutableListOf(),
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     val categories: MutableList<RecipeCategory> = mutableListOf()

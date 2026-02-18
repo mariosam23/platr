@@ -16,13 +16,13 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserAlreadyExistsException::class)
-    fun handleConflict(ex: UserAlreadyExistsException): ResponseEntity<Map<String, String>> {
+    fun handleUserConflict(ex: UserAlreadyExistsException): ResponseEntity<Map<String, String>> {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(mapOf("error" to (ex.message ?: "Conflict")))
     }
 
     @ExceptionHandler(UserNotFoundException::class)
-    fun handleNotFound(ex: UserNotFoundException): ResponseEntity<Map<String, String>> {
+    fun handleUserNotFound(ex: UserNotFoundException): ResponseEntity<Map<String, String>> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(mapOf("error" to (ex.message ?: "Not found")))
     }
@@ -31,5 +31,11 @@ class GlobalExceptionHandler {
     fun handleResponseStatus(ex: ResponseStatusException): ResponseEntity<Map<String, String>> {
         return ResponseEntity.status(ex.statusCode)
             .body(mapOf("error" to (ex.reason ?: "Error")))
+    }
+
+    @ExceptionHandler(RecipeNotFoundException::class)
+    fun handleRecipeNotFound(ex: RecipeNotFoundException): ResponseEntity<Map<String, String>> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(mapOf("error" to (ex.message ?: "Recipe not found")))
     }
 }

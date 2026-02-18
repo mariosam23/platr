@@ -12,7 +12,7 @@ import java.util.UUID
 
 data class MealPlanRequest(
     @field:NotNull(message = "Week start is required")
-    val weekStart: LocalDate,
+    var weekStart: LocalDate,
 
     @field:NotBlank(message = "Notes are required")
     @field:Size(max = 1000, message = "Notes must be at most 1000 chars")
@@ -25,11 +25,11 @@ data class MealPlanRequest(
 
 data class MealPlanRecipeAssignmentRequest(
     @field:NotNull(message = "Recipe id is required")
-    val recipeId: UUID,
+    var recipeId: UUID,
 
     @field:NotNull(message = "Meal type is required")
-    val mealType: MealType,
+    var mealType: MealType,
 
     @field:NotNull(message = "Day of week is required")
-    val dayOfWeek: DayOfWeek,
+    var dayOfWeek: DayOfWeek,
 )
