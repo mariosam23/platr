@@ -55,14 +55,10 @@ class MealPlanService(
 
     @Transactional
     fun updateMealPlan(planId: UUID, request: MealPlanRequest, userEmail: String): MealPlanDto {
-        val user = findUserByEmailOrThrow(userEmail)
+        findUserByEmailOrThrow(userEmail)
 
         val mealPlan = mealPlanRepository.findById(planId)
             .orElseThrow { IllegalArgumentException("Meal plan not found with ID: $planId") }
-
-        if (mealPlan.owner.userId != user.userId) {
-            throw IllegalAccessException("User does not have permission to update this meal plan")
-        }
 
         mealPlan.weekStart = request.weekStart
         mealPlan.notes = request.notes
@@ -72,7 +68,7 @@ class MealPlanService(
         mealPlan.mealPlanRecipes.addAll(mealPlanRecipes)
 
         val updatedMealPlan = mealPlanRepository.save(mealPlan)
-        logger.info("Updated meal plan with ID: ${updatedMealPlan.mealPlanId} for user: ${user.username}")
+        logger.info("Updated meal plan with ID: ${updatedMealPlan.mealPlanId} for user: $userEmail")
         return updatedMealPlan.toMealPlanDto()
     }
 

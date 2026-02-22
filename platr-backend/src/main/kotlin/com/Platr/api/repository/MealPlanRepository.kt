@@ -13,4 +13,6 @@ import java.util.UUID
 interface MealPlanRepository : JpaRepository<MealPlan, UUID> {
     @Query("SELECT mp FROM MealPlan mp WHERE mp.owner.userId = :ownerUserId")
     fun findByOwnerUserId(@Param("ownerUserId") ownerUserId: UUID, pageable: Pageable): Page<MealPlan>
+
+    fun existsByMealPlanIdAndOwnerUserId(mealPlanId: UUID, ownerUserId: UUID): Boolean
 }
