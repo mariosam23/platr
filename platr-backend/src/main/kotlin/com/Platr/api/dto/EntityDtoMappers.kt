@@ -5,6 +5,7 @@ import com.Platr.api.entity.MealPlanRecipe
 import com.Platr.api.entity.Recipe
 import com.Platr.api.entity.RecipeIngredient
 import com.Platr.api.entity.Review
+import com.Platr.api.entity.User
 import com.Platr.api.enums.Role
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -40,7 +41,7 @@ fun Recipe.toRecipeDetailDto() = RecipeDetailDto(
     updatedAt = updatedAt,
 )
 
-fun RegisterRequest.toUser(passwordEncoder: PasswordEncoder) = com.Platr.api.entity.User(
+fun RegisterRequest.toUser(passwordEncoder: PasswordEncoder) = User(
     username = this.username,
     email = this.email,
     hashedPassword = passwordEncoder.encode(this.password) ?: throw IllegalStateException("Failed to encode password"),
