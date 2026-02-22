@@ -4,6 +4,7 @@ import com.Platr.api.entity.MealPlan
 import com.Platr.api.entity.MealPlanRecipe
 import com.Platr.api.entity.Recipe
 import com.Platr.api.entity.RecipeIngredient
+import com.Platr.api.entity.Review
 import com.Platr.api.enums.Role
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -33,6 +34,7 @@ fun Recipe.toRecipeDetailDto() = RecipeDetailDto(
     ownerId = owner.userId,
     ownerUsername = owner.username,
     ingredients = ingredients.map { it.toRecipeIngredientDto() },
+    reviews = reviews.map { it.toReviewResponse() },
     categoryTypes = categories.map { it.category.categoryType }.toSet(),
     createdAt = createdAt,
     updatedAt = updatedAt,
@@ -62,6 +64,15 @@ fun RecipeIngredient.toRecipeIngredientDto() = RecipeIngredientDto(
     ingredientName = ingredient.name,
     quantity = quantity,
     unit = unit,
+)
+
+fun Review.toReviewResponse() = ReviewResponse(
+    reviewId = reviewId,
+    rating = rating,
+    text = text,
+    ownerId = owner.userId,
+    ownerUsername = owner.username,
+    createdAt = createdAt,
 )
 
 private fun MealPlanRecipe.toMealPlanRecipeDto() = MealPlanRecipeDto(

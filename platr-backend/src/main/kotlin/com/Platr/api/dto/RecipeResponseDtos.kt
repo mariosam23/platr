@@ -50,6 +50,7 @@ data class RecipeDetailDto(
     val ownerId: UUID?,
     val ownerUsername: String,
     val ingredients: List<RecipeIngredientDto>,
+    val reviews: List<ReviewResponse>,
     val categoryTypes: Set<CategoryType>,
     val createdAt: Instant,
     val updatedAt: Instant,
