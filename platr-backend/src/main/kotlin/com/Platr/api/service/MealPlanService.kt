@@ -6,6 +6,8 @@ import com.Platr.api.dto.toMealPlanDto
 import com.Platr.api.entity.MealPlan
 import com.Platr.api.entity.MealPlanRecipe
 import com.Platr.api.entity.User
+import com.Platr.api.exception.MealPlanNotFoundException
+import com.Platr.api.exception.RecipeNotFoundException
 import com.Platr.api.exception.UserNotFoundException
 import com.Platr.api.repository.MealPlanRepository
 import com.Platr.api.repository.RecipeRepository
@@ -58,7 +60,7 @@ class MealPlanService(
         findUserByEmailOrThrow(userEmail)
 
         val mealPlan = mealPlanRepository.findById(planId)
-            .orElseThrow { IllegalArgumentException("Meal plan not found with ID: $planId") }
+            .orElseThrow { MealPlanNotFoundException("Meal plan not found with id: $planId") }
 
         mealPlan.weekStart = request.weekStart
         mealPlan.notes = request.notes
@@ -75,7 +77,7 @@ class MealPlanService(
     @Transactional
     fun deleteMealPlan(planId: UUID) {
         if (!mealPlanRepository.existsById(planId)) {
-            throw IllegalArgumentException("Meal plan not found with ID: $planId")
+            throw MealPlanNotFoundException("Meal plan not found with id: $planId")
         }
 
         mealPlanRepository.deleteById(planId)
@@ -85,7 +87,7 @@ class MealPlanService(
     private fun toMealPlanRecipes(mealPlan: MealPlan, request: MealPlanRequest): List<MealPlanRecipe> {
         fun findRecipeOrThrow(recipeId: UUID) =
             recipeRepository.findById(recipeId)
-                .orElseThrow { IllegalArgumentException("Recipe not found with ID: $recipeId") }
+                .orElseThrow { RecipeNotFoundException("Recipe not found with id: $recipeId") }
 
         return request.assignments.map { assignment ->
             val recipe = findRecipeOrThrow(assignment.recipeId)
