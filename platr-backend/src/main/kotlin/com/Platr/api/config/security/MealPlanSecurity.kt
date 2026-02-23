@@ -1,5 +1,6 @@
-package com.Platr.api.config
+package com.Platr.api.config.security
 
+import com.Platr.api.config.AuthenticatedUserPrincipal
 import com.Platr.api.repository.MealPlanRepository
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component

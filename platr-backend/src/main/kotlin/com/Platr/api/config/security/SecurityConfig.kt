@@ -1,5 +1,6 @@
-package com.Platr.api.config
+package com.Platr.api.config.security
 
+import com.Platr.api.config.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
