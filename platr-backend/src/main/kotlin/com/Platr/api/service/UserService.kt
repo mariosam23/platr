@@ -38,6 +38,9 @@ class UserService(
         } catch (ex: DataIntegrityViolationException) {
             logger.warn("User creation failed due to unique constraint conflict for email: ${user.email}")
             throw UserAlreadyExistsException("User already exists")
+        } catch (ex: Exception) {
+            logger.error("Unexpected error occurred while creating user with email: ${user.email}", ex)
+            throw ex
         }
     }
 
