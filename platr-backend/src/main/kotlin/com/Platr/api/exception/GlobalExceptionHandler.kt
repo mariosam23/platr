@@ -2,6 +2,8 @@ package com.Platr.api.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -29,6 +31,18 @@ class GlobalExceptionHandler {
     fun handleUserNotFound(ex: UserNotFoundException): ResponseEntity<ApiErrorResponse> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(buildError(HttpStatus.NOT_FOUND, ex.message ?: "Not found"))
+    }
+
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentials(ex: BadCredentialsException): ResponseEntity<ApiErrorResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(buildError(HttpStatus.UNAUTHORIZED, ex.message ?: "Invalid credentials"))
+    }
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDenied(ex: AccessDeniedException): ResponseEntity<ApiErrorResponse> {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(buildError(HttpStatus.FORBIDDEN, ex.message ?: "Access denied"))
     }
 
     @ExceptionHandler(ResponseStatusException::class)

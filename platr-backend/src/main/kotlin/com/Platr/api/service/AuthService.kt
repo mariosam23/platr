@@ -55,7 +55,7 @@ class AuthService(
             )
         } catch (e: BadCredentialsException) {
             logger.warn("Failed login attempt for email: ${request.email}")
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password")
+            throw BadCredentialsException("Invalid email or password", e)
         }
 
         val userDetails = userDetailsService.loadUserByUsername(request.email)
