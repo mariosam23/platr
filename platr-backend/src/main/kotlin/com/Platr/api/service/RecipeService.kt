@@ -84,7 +84,7 @@ class RecipeService(
     }
 
     @Transactional
-    fun updateRecipe(recipeId: String, request: RecipeRequest, userEmail: String): RecipeSummaryDto {
+    fun updateRecipe(recipeId: UUID, request: RecipeRequest, userEmail: String): RecipeSummaryDto {
         findUserByEmailOrThrow(userEmail)
         val recipe = findRecipeByIdOrThrow(recipeId)
 
@@ -133,7 +133,7 @@ class RecipeService(
     }
 
     @Transactional
-    fun addReview(recipeId: String, reviewRequest: ReviewRequest, userEmail: String): ReviewResponse {
+    fun addReview(recipeId: UUID, reviewRequest: ReviewRequest, userEmail: String): ReviewResponse {
         val recipe = findRecipeByIdOrThrow(recipeId)
         val currentUser = findUserByEmailOrThrow(userEmail)
         val currentReviewCount = recipe.reviews.size
@@ -154,7 +154,7 @@ class RecipeService(
     }
 
     @Transactional(readOnly = true)
-    fun getRecipeDetail(recipeId: String): RecipeDetailDto {
+    fun getRecipeDetail(recipeId: UUID): RecipeDetailDto {
         return findRecipeByIdOrThrow(recipeId).toRecipeDetailDto()
     }
 
@@ -196,9 +196,8 @@ class RecipeService(
             }
     }
 
-    private fun findRecipeByIdOrThrow(recipeId: String): Recipe {
-        val recipeUuid = parseUuid(recipeId, "recipe id")
-        return recipeRepository.findById(recipeUuid)
+    private fun findRecipeByIdOrThrow(recipeId: UUID): Recipe {
+        return recipeRepository.findById(recipeId)
             .orElseThrow { RecipeNotFoundException("Recipe not found with id: $recipeId") }
     }
 

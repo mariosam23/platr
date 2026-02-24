@@ -46,7 +46,7 @@ class RecipeController(
 
     @GetMapping("/{id}")
     fun getRecipeDetail(@PathVariable id: UUID): ResponseEntity<RecipeDetailDto> {
-        val recipeDetail = recipeService.getRecipeDetail(id.toString())
+        val recipeDetail = recipeService.getRecipeDetail(id)
         return ResponseEntity.ok(recipeDetail)
     }
 
@@ -70,7 +70,7 @@ class RecipeController(
         authentication: Authentication,
     ): ResponseEntity<RecipeSummaryDto> {
         val userEmail = authentication.name
-        val updatedRecipe = recipeService.updateRecipe(id.toString(), request, userEmail)
+        val updatedRecipe = recipeService.updateRecipe(id, request, userEmail)
 
         return ResponseEntity.ok(updatedRecipe)
     }
@@ -90,7 +90,7 @@ class RecipeController(
         authentication: Authentication,
     ): ResponseEntity<ReviewResponse> {
         val userEmail = authentication.name
-        val reviewResponse = recipeService.addReview(id.toString(), reviewRequest, userEmail)
+        val reviewResponse = recipeService.addReview(id, reviewRequest, userEmail)
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewResponse)
     }
 }
