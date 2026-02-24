@@ -12,6 +12,8 @@ import java.util.UUID
 interface UserRepository : JpaRepository<User, UUID> {
     fun findUserByEmail(email: String): User?
 
+    fun findUserByUsername(username: String): User?
+
     @EntityGraph(attributePaths = ["roles"])
     @Query("SELECT u FROM User u WHERE u.email = :email")
     fun findUserByEmailWithRoles(@Param("email") email: String): User?

@@ -5,6 +5,7 @@ import com.Platr.api.exception.UserNotFoundException
 import com.Platr.api.exception.UserAlreadyExistsException
 import com.Platr.api.repository.UserRepository
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,14 +22,23 @@ class UserService(
 
     @Transactional
     fun createUser(user: User): User {
-        val existingUser = userRepository.findUserByEmail(user.email)
-        if (existingUser != null) {
-            logger.warn("Attempt to create user with existing email: ${user.email}")
-            throw UserAlreadyExistsException("User with email ${user.email} already exists")
+        if (userRepository.findUserByUsername(user.username) != null) {
+            logger.warn("User with username ${user.username} already exists")
+            throw UserAlreadyExistsException("Username already exists")
+        }
+
+        if (userRepository.findUserByEmail(user.email) != null) {
+            logger.warn("User with email ${user.email} already exists")
+            throw UserAlreadyExistsException("Email already exists")
         }
 
         logger.info("Creating new user with email: ${user.email}")
-        return userRepository.save(user)
+        return try {
+            userRepository.save(user)
+        } catch (ex: DataIntegrityViolationException) {
+            logger.warn("User creation failed due to unique constraint conflict for email: ${user.email}")
+            throw UserAlreadyExistsException("User already exists")
+        }
     }
 
     @Transactional(readOnly = true)
