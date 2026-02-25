@@ -1,5 +1,6 @@
 package com.Platr.api.service
 
+import com.Platr.api.config.AuthenticatedUserPrincipal
 import com.Platr.api.dto.AuthResponse
 import com.Platr.api.dto.LoginRequest
 import com.Platr.api.dto.RegisterRequest
@@ -34,7 +35,7 @@ class AuthService(
         val userToCreate = userRequest.toUser(passwordEncoder)
         userService.createUser(userToCreate)
 
-        val userDetails = userDetailsService.loadUserByUsername(userRequest.email)
+        val userDetails = userDetailsService.loadUserByUsername(userRequest.email) as AuthenticatedUserPrincipal
         val accessToken = tokenService.generateAccessToken(userDetails)
         val refreshToken = tokenService.generateRefreshToken(userDetails)
 
@@ -58,7 +59,7 @@ class AuthService(
             throw BadCredentialsException("Invalid email or password", e)
         }
 
-        val userDetails = userDetailsService.loadUserByUsername(request.email)
+        val userDetails = userDetailsService.loadUserByUsername(request.email) as AuthenticatedUserPrincipal
         val accessToken = tokenService.generateAccessToken(userDetails)
         val refreshToken = tokenService.generateRefreshToken(userDetails)
         val user = userService.findByEmail(request.email)
@@ -74,10 +75,10 @@ class AuthService(
 
     @Transactional
     fun refresh(refreshToken: String): AuthResponse {
-        val username = tokenService.extractUsername(refreshToken)
+        val email = tokenService.extractEmail(refreshToken)
             ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid token claims")
 
-        val userDetails = userDetailsService.loadUserByUsername(username)
+        val userDetails = userDetailsService.loadUserByUsername(email) as AuthenticatedUserPrincipal
 
         if (!tokenService.isValid(refreshToken, userDetails, type = "refresh")) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid or expired refresh token")
@@ -85,7 +86,7 @@ class AuthService(
 
         val newAccessToken = tokenService.generateAccessToken(userDetails)
         val newRefreshToken = tokenService.generateRefreshToken(userDetails)
-        val user = userService.findByEmail(username)
+        val user = userService.findByEmail(email)
 
         return AuthResponse(
             jwtToken = newAccessToken,
