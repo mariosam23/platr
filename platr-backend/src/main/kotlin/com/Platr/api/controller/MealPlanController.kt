@@ -33,6 +33,16 @@ class MealPlanController(
         return mealPlanService.getUserMealPlans(authentication.name, pageable)
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun getMealPlanById(
+        @PathVariable id: UUID,
+        authentication: Authentication
+    ): ResponseEntity<MealPlanDto> {
+        val mealPlan = mealPlanService.getMealPlanById(id, authentication.name)
+        return ResponseEntity.ok(mealPlan)
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun createMealPlan(

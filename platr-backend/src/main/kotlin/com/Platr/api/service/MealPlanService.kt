@@ -36,6 +36,14 @@ class MealPlanService(
             .map { it.toMealPlanDto() }
     }
 
+    @Transactional(readOnly = true)
+    fun getMealPlanById(planId: UUID, userEmail: String): MealPlanDto {
+        findUserByEmailOrThrow(userEmail)
+        val mealPlan = mealPlanRepository.findById(planId)
+            .orElseThrow { MealPlanNotFoundException("Meal plan not found with id: $planId") }
+        return mealPlan.toMealPlanDto()
+    }
+
     @Transactional
     fun createMealPlan(request: MealPlanRequest, userEmail: String): MealPlanDto {
         val user = findUserByEmailOrThrow(userEmail)
