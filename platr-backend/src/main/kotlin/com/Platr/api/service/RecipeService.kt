@@ -6,6 +6,7 @@ import com.Platr.api.dto.RecipeSummaryDto
 import com.Platr.api.dto.ReviewRequest
 import com.Platr.api.dto.ReviewResponse
 import com.Platr.api.dto.toRecipeDetailDto
+import com.Platr.api.dto.toRecipeSummaryDto
 import com.Platr.api.dto.toReviewResponse
 import com.Platr.api.entity.Recipe
 import com.Platr.api.entity.RecipeCategory
@@ -41,7 +42,7 @@ class RecipeService(
 
     @Transactional(readOnly = true)
     fun getAllRecipes(pageable: Pageable): Page<RecipeSummaryDto> {
-        return recipeRepository.findAll(pageable).map { RecipeSummaryDto.fromEntity(it) }
+        return recipeRepository.findAll(pageable).map { it.toRecipeSummaryDto() }
     }
 
     @Transactional(readOnly = true)
@@ -49,14 +50,14 @@ class RecipeService(
         val user = findUserByEmailOrThrow(userEmail)
 
         return recipeRepository.findByOwnerUserId(user.userId!!, pageable)
-            .map { RecipeSummaryDto.fromEntity(it) }
+            .map { it.toRecipeSummaryDto() }
     }
 
     @Transactional(readOnly = true)
     fun getRecipesByCategory(categoryId: String, pageable: Pageable): Page<RecipeSummaryDto> {
         val categoryUuid = parseUuid(categoryId, "category")
         return recipeRepository.findByCategoryId(categoryUuid, pageable)
-            .map { RecipeSummaryDto.fromEntity(it) }
+            .map { it.toRecipeSummaryDto() }
     }
 
     @Transactional
@@ -82,7 +83,7 @@ class RecipeService(
         recipe.categories.addAll(buildRecipeCategories(recipe, request.categoryIds))
 
         val savedRecipe = recipeRepository.save(recipe)
-        return RecipeSummaryDto.fromEntity(savedRecipe)
+        return savedRecipe.toRecipeSummaryDto()
     }
 
     @Transactional
@@ -103,7 +104,7 @@ class RecipeService(
         recipe.categories.clear()
         recipe.categories.addAll(buildRecipeCategories(recipe, request.categoryIds))
 
-        return RecipeSummaryDto.fromEntity(recipeRepository.save(recipe))
+        return recipeRepository.save(recipe).toRecipeSummaryDto()
     }
 
     @Transactional
@@ -130,7 +131,7 @@ class RecipeService(
             categoryIds = categoryIds.ifEmpty { setOf(EMPTY_FILTER_SENTINEL) },
             hasCategoryFilter = hasCategoryFilter,
             pageable = pageable,
-        ).map { RecipeSummaryDto.fromEntity(it) }
+        ).map { it.toRecipeSummaryDto() }
     }
 
     @Transactional
