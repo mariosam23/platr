@@ -118,7 +118,7 @@ class RecipeService(
     @Transactional(readOnly = true)
     fun searchRecipes(query: String, filters: Map<String, String>, pageable: Pageable): Page<RecipeSummaryDto> {
         val normalizedQuery = query.trim()
-        val categoryIds = parseUuidCsv(filters["categoryId"] ?: filters["category"], "category")
+        val categoryIds = parseUuidCsv(filters["categoryId"], "category")
         val ingredientIds = parseUuidCsv(filters["ingredientIds"], "ingredient")
         val hasCategoryFilter = categoryIds.isNotEmpty()
         val hasIngredientFilter = ingredientIds.isNotEmpty()
@@ -186,10 +186,27 @@ class RecipeService(
         review.text = reviewRequest.text
         reviewRepository.save(review)
 
-        recipe.avgRating = recipe.reviews.map { it.rating }.average()
+        val freshRatings = reviewRepository.findByRecipeRecipeId(recipeId, Pageable.unpaged()).content
+        recipe.avgRating = if (freshRatings.isEmpty()) 0.0 else freshRatings.map { it.rating }.average()
         recipeRepository.save(recipe)
 
         return review.toReviewResponse()
+    }
+
+    @Transactional
+    fun deleteRecipeReview(recipeId: UUID, reviewId: UUID) {
+        val recipe = findRecipeByIdOrThrow(recipeId)
+        val review = findReviewByIdOrThrow(reviewId)
+
+        if (review.recipe.recipeId != recipeId) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found with id: $reviewId")
+        }
+
+        reviewRepository.delete(review)
+        recipe.reviews.remove(review)
+
+        recipe.avgRating = if (recipe.reviews.isEmpty()) 0.0 else recipe.reviews.map { it.rating }.average()
+        recipeRepository.save(recipe)
     }
 
     private fun buildRecipeIngredients(recipe: Recipe, request: RecipeRequest): List<RecipeIngredient> {

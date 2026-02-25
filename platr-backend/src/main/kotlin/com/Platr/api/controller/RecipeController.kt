@@ -33,11 +33,15 @@ class RecipeController(
     fun getAllRecipes(
         @RequestParam(required = false) search: String?,
         @RequestParam(required = false) category: String?,
+        @RequestParam(required = false) ingredientIds: String?,
         pageable: Pageable,
     ): ResponseEntity<Page<RecipeSummaryDto>> {
         val filters = mutableMapOf<String, String>()
         if (!category.isNullOrBlank()) {
             filters["categoryId"] = category
+        }
+        if (!ingredientIds.isNullOrBlank()) {
+            filters["ingredientIds"] = ingredientIds
         }
 
         val recipes = recipeService.searchRecipes(search.orEmpty(), filters, pageable)
@@ -106,7 +110,6 @@ class RecipeController(
         @PathVariable id: UUID,
         @PathVariable reviewId: UUID,
         @Valid @RequestBody reviewRequest: ReviewRequest,
-        authentication: Authentication,
     ): ResponseEntity<ReviewResponse> {
         val updatedReview = recipeService.updateRecipeReview(id, reviewId, reviewRequest)
         return ResponseEntity.ok(updatedReview)
@@ -117,8 +120,8 @@ class RecipeController(
     fun deleteReview(
         @PathVariable id: UUID,
         @PathVariable reviewId: UUID,
-        authentication: Authentication,
     ): ResponseEntity<Void> {
-        TODO()
+        recipeService.deleteRecipeReview(id, reviewId)
+        return ResponseEntity.noContent().build()
     }
 }
