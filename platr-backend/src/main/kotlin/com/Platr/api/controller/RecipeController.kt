@@ -78,7 +78,7 @@ class RecipeController(
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or @recipeSecurity.isOwner(authentication, #id)")
     fun deleteRecipe(@PathVariable id: UUID): ResponseEntity<Void> {
-        recipeService.deleteRecipe(id.toString())
+        recipeService.deleteRecipe(id)
         return ResponseEntity.noContent().build()
     }
 
@@ -95,7 +95,6 @@ class RecipeController(
     }
 
     @GetMapping("/{id}/reviews")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getReviews(@PathVariable id: UUID): ResponseEntity<List<ReviewResponse>> {
         TODO()
     }

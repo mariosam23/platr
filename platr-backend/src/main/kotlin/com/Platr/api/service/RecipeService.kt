@@ -105,13 +105,12 @@ class RecipeService(
     }
 
     @Transactional
-    fun deleteRecipe(recipeId: String) {
-        val recipeUuid = parseUuid(recipeId, "recipe id")
-        if (!recipeRepository.existsById(recipeUuid)) {
+    fun deleteRecipe(recipeId: UUID) {
+        if (!recipeRepository.existsById(recipeId)) {
             throw RecipeNotFoundException("Recipe not found with id: $recipeId")
         }
 
-        recipeRepository.deleteById(recipeUuid)
+        recipeRepository.deleteById(recipeId)
     }
 
     @Transactional(readOnly = true)
