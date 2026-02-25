@@ -139,6 +139,10 @@ class RecipeService(
         val currentUser = findUserByEmailOrThrow(userEmail)
         val currentReviewCount = recipe.reviews.size
 
+        if (reviewRepository.existsByRecipeRecipeIdAndOwnerUserId(recipeId, currentUser.userId!!)) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "User already reviewed this recipe")
+        }
+
         val review = Review(
             reviewId = null,
             rating = reviewRequest.rating,

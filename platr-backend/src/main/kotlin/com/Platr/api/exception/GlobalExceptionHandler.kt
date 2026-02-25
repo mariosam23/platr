@@ -1,5 +1,6 @@
 package com.Platr.api.exception
 
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
@@ -70,6 +71,12 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(buildError(HttpStatus.NOT_FOUND, ex.message ?: "Meal plan not found"))
     }
+
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handleDuplicateKey(ex: DataIntegrityViolationException): ResponseEntity<ApiErrorResponse> {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(buildError(HttpStatus.CONFLICT, "Data integrity violation: ${ex.message}"))
+        }
 
     private fun buildError(status: HttpStatus, message: String): ApiErrorResponse {
         return ApiErrorResponse(

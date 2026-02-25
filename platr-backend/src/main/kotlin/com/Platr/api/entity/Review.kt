@@ -10,10 +10,11 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import java.util.UUID
 
 @Entity
-@Table(name = "reviews")
+@Table(name = "reviews", uniqueConstraints = [UniqueConstraint(name = "uc_reviews_user_recipe", columnNames = ["user_id", "recipe_id"])])
 class Review(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
