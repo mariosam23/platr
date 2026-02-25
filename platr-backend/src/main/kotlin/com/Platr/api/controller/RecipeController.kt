@@ -93,4 +93,31 @@ class RecipeController(
         val reviewResponse = recipeService.addReview(id, reviewRequest, userEmail)
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewResponse)
     }
+
+    @GetMapping("/{id}/reviews")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    fun getReviews(@PathVariable id: UUID): ResponseEntity<List<ReviewResponse>> {
+        TODO()
+    }
+
+    @PutMapping("/{id}/reviews/{reviewId}")
+    @PreAuthorize("@reviewSecurity.isOwner(authentication, #reviewId) or hasRole('ADMIN')")
+    fun updateReview(
+        @PathVariable id: UUID,
+        @PathVariable reviewId: UUID,
+        @Valid @RequestBody reviewRequest: ReviewRequest,
+        authentication: Authentication,
+    ): ResponseEntity<ReviewResponse> {
+        TODO()
+    }
+
+    @DeleteMapping("/{id}/reviews/{reviewId}")
+    @PreAuthorize("@reviewSecurity.isOwner(authentication, #reviewId) or hasRole('ADMIN')")
+    fun deleteReview(
+        @PathVariable id: UUID,
+        @PathVariable reviewId: UUID,
+        authentication: Authentication,
+    ): ResponseEntity<Void> {
+        TODO()
+    }
 }

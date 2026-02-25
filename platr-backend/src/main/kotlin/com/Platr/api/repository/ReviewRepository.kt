@@ -7,4 +7,5 @@ import java.util.UUID
 
 @Repository
 interface ReviewRepository : JpaRepository<Review, UUID> {
+    fun existsByReviewIdAndOwnerUserId(reviewId: UUID, ownerUserId: UUID): Boolean
 }
