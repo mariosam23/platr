@@ -108,7 +108,8 @@ class RecipeController(
         @Valid @RequestBody reviewRequest: ReviewRequest,
         authentication: Authentication,
     ): ResponseEntity<ReviewResponse> {
-        TODO()
+        val updatedReview = recipeService.updateRecipeReview(id, reviewId, reviewRequest)
+        return ResponseEntity.ok(updatedReview)
     }
 
     @DeleteMapping("/{id}/reviews/{reviewId}")

@@ -137,7 +137,6 @@ class RecipeService(
     fun addReview(recipeId: UUID, reviewRequest: ReviewRequest, userEmail: String): ReviewResponse {
         val recipe = findRecipeByIdOrThrow(recipeId)
         val currentUser = findUserByEmailOrThrow(userEmail)
-        val currentReviewCount = recipe.reviews.size
 
         if (recipeRepository.existsByRecipeIdAndOwnerUserId(recipeId, currentUser.userId!!)) {
             throw ResponseStatusException(HttpStatus.CONFLICT, "User cannot review their own recipe")
@@ -172,6 +171,25 @@ class RecipeService(
         findRecipeByIdOrThrow(recipeId)
         val reviews = reviewRepository.findByRecipeRecipeId(recipeId, pageable)
         return reviews.map { it.toReviewResponse() }
+    }
+
+    @Transactional
+    fun updateRecipeReview(recipeId: UUID, reviewId: UUID, reviewRequest: ReviewRequest): ReviewResponse {
+        val recipe = findRecipeByIdOrThrow(recipeId)
+        val review = findReviewByIdOrThrow(reviewId)
+
+        if (review.recipe.recipeId != recipeId) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found with id: $reviewId")
+        }
+
+        review.rating = reviewRequest.rating
+        review.text = reviewRequest.text
+        reviewRepository.save(review)
+
+        recipe.avgRating = recipe.reviews.map { it.rating }.average()
+        recipeRepository.save(recipe)
+
+        return review.toReviewResponse()
     }
 
     private fun buildRecipeIngredients(recipe: Recipe, request: RecipeRequest): List<RecipeIngredient> {
@@ -210,6 +228,11 @@ class RecipeService(
                     category = categoryEntity,
                 )
             }
+    }
+
+    private fun findReviewByIdOrThrow(reviewId: UUID): Review {
+        return reviewRepository.findById(reviewId)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found with id: $reviewId") }
     }
 
     private fun findRecipeByIdOrThrow(recipeId: UUID): Recipe {
