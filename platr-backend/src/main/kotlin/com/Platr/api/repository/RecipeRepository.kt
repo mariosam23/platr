@@ -1,6 +1,7 @@
 package com.Platr.api.repository
 
 import com.Platr.api.entity.Recipe
+import com.Platr.api.entity.Review
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

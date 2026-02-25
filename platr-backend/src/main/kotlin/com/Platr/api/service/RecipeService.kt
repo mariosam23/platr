@@ -17,6 +17,7 @@ import com.Platr.api.exception.UserNotFoundException
 import com.Platr.api.repository.CategoryRepository
 import com.Platr.api.repository.IngredientRepository
 import com.Platr.api.repository.RecipeRepository
+import com.Platr.api.repository.ReviewRepository
 import com.Platr.api.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -32,6 +33,7 @@ class RecipeService(
     private val ingredientRepository: IngredientRepository,
     private val categoryRepository: CategoryRepository,
     private val userRepository: UserRepository,
+    private val reviewRepository: ReviewRepository
 ) {
     companion object {
         private val EMPTY_FILTER_SENTINEL = UUID(0L, 0L)
@@ -155,6 +157,13 @@ class RecipeService(
     @Transactional(readOnly = true)
     fun getRecipeDetail(recipeId: UUID): RecipeDetailDto {
         return findRecipeByIdOrThrow(recipeId).toRecipeDetailDto()
+    }
+
+    @Transactional(readOnly = true)
+    fun getReviewsForRecipe(recipeId: UUID, pageable: Pageable): Page<ReviewResponse> {
+        findRecipeByIdOrThrow(recipeId)
+        val reviews = reviewRepository.findByRecipeRecipeId(recipeId, pageable)
+        return reviews.map { it.toReviewResponse() }
     }
 
     private fun buildRecipeIngredients(recipe: Recipe, request: RecipeRequest): List<RecipeIngredient> {

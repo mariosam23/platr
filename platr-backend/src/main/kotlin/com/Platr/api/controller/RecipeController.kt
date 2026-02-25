@@ -95,8 +95,9 @@ class RecipeController(
     }
 
     @GetMapping("/{id}/reviews")
-    fun getReviews(@PathVariable id: UUID): ResponseEntity<List<ReviewResponse>> {
-        TODO()
+    fun getReviews(@PathVariable id: UUID, pageable: Pageable): ResponseEntity<Page<ReviewResponse>> {
+        val reviews = recipeService.getReviewsForRecipe(id, pageable)
+        return ResponseEntity.ok(reviews)
     }
 
     @PutMapping("/{id}/reviews/{reviewId}")
