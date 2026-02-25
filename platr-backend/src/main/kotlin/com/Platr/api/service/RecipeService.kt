@@ -139,6 +139,10 @@ class RecipeService(
         val currentUser = findUserByEmailOrThrow(userEmail)
         val currentReviewCount = recipe.reviews.size
 
+        if (recipeRepository.existsByRecipeIdAndOwnerUserId(recipeId, currentUser.userId!!)) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "User cannot review their own recipe")
+        }
+
         if (reviewRepository.existsByRecipeRecipeIdAndOwnerUserId(recipeId, currentUser.userId!!)) {
             throw ResponseStatusException(HttpStatus.CONFLICT, "User already reviewed this recipe")
         }
@@ -152,7 +156,7 @@ class RecipeService(
         )
 
         recipe.reviews.add(review)
-        recipe.avgRating = ((recipe.avgRating * currentReviewCount) + review.rating.toDouble()) / (currentReviewCount + 1)
+        recipe.avgRating = recipe.reviews.map { it.rating }.average()
 
         recipeRepository.saveAndFlush(recipe)
         return review.toReviewResponse()
