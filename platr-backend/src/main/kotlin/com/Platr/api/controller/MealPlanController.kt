@@ -6,6 +6,7 @@ import com.Platr.api.service.MealPlanService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
@@ -50,7 +51,7 @@ class MealPlanController(
         authentication: Authentication
     ): ResponseEntity<MealPlanDto> {
         val createdMealPlan = mealPlanService.createMealPlan(request, authentication.name)
-        return ResponseEntity.ok(createdMealPlan)
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdMealPlan)
     }
 
     @PutMapping("/{id}")
