@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
-      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
-      DB_URL: ${{ vars.DB_URL }}
+      POSTGRES_USER: postgres
+      POSTGRES_DB: platr_backend_ci
+      DB_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/platr_backend_ci
       ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
       ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
