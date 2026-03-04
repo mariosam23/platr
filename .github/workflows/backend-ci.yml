@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
-      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
-      DB_URL: ${{ vars.DB_URL }}
+      POSTGRES_USER: postgres
+      POSTGRES_DB: platr_backend_ci
+      DB_URL: postgresql://postgres:test-postgres-password@localhost:5432/platr_backend_ci
       ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
       ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      POSTGRES_PASSWORD: test-postgres-password
+      JWT_SECRET: test-jwt-secret
+      ADMIN_PASSWORD: test-admin-password
 
     services:
       postgres:
