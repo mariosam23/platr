@@ -63,5 +63,5 @@ jobs:
       - name: Run Spring Boot tests
         run: ./gradlew check
       
-      # - name: Run code OWASP Dependency Check
-      #   run: ./gradlew dependencyCheckAnalyze
+       # - name: Run code OWASP Dependency Check
+       #   run: ./gradlew dependencyCheckAnalyze
