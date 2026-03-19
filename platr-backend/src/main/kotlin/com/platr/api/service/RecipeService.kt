@@ -112,11 +112,40 @@ class RecipeService(
         recipe.imageUrl = request.imageUrl
         recipe.calories = request.calories
 
-        recipe.ingredients.clear()
-        recipe.ingredients.addAll(buildRecipeIngredients(recipe, request))
+        val newIngredients = buildRecipeIngredients(recipe, request)
+        val newCategories = buildRecipeCategories(recipe, request.categoryIds)
 
-        recipe.categories.clear()
-        recipe.categories.addAll(buildRecipeCategories(recipe, request.categoryIds))
+        // Update ingredients
+        val oldIngredients = recipe.ingredients.toList()
+        oldIngredients.forEach { old ->
+            if (newIngredients.none { it.ingredient.ingredientId == old.ingredient.ingredientId }) {
+                recipe.ingredients.remove(old)
+            }
+        }
+
+        newIngredients.forEach { newIng ->
+            val existing = recipe.ingredients.find { it.ingredient.ingredientId == newIng.ingredient.ingredientId }
+            if (existing != null) {
+                existing.quantity = newIng.quantity
+                existing.unit = newIng.unit
+            } else {
+                recipe.ingredients.add(newIng)
+            }
+        }
+
+        // Update categories
+        val oldCategories = recipe.categories.toList()
+        oldCategories.forEach { old ->
+            if (newCategories.none { it.category.categoryId == old.category.categoryId }) {
+                recipe.categories.remove(old)
+            }
+        }
+        newCategories.forEach { newCat ->
+            val existing = recipe.categories.find { it.category.categoryId == newCat.category.categoryId }
+            if (existing == null) {
+                recipe.categories.add(newCat)
+            }
+        }
 
         return recipeRepository.save(recipe).toRecipeSummaryDto()
     }
@@ -179,11 +208,12 @@ class RecipeService(
                 recipe = recipe,
             )
 
-        recipe.reviews.add(review)
+        val savedReview = reviewRepository.save(review)
+        recipe.reviews.add(savedReview)
         recipe.avgRating = recipe.reviews.map { it.rating }.average()
 
-        recipeRepository.saveAndFlush(recipe)
-        return review.toReviewResponse()
+        recipeRepository.save(recipe)
+        return savedReview.toReviewResponse()
     }
 
     @Transactional(readOnly = true)
