@@ -116,11 +116,41 @@ cd platr-backend
 
 The server starts on port **9023**. Swagger UI is available at `http://localhost:9023/swagger-ui.html`
 
+## CI/CD
+
+Backend CI is configured with GitHub Actions:
+
+- **Workflow file:** `.github/workflows/backend-ci.yml`
+- **Trigger:** `pull_request` to `main` (`opened`, `synchronize`, `reopened`)
+- **Path filter:** runs only when files under `platr-backend/**` change
+- **Runner:** `ubuntu-latest`
+- **Java:** Temurin JDK 23
+- **Database service:** PostgreSQL 16 (ephemeral service container in CI)
+
+### What The CI Pipeline Runs
+
+1. Checkout repository
+2. Set up JDK 23 with Gradle cache
+3. Run Kotlin lint checks (`./gradlew ktlintCheck`)
+4. Run build verification/tests (`./gradlew check`)
+
+### Required GitHub Environment Variables
+
+The workflow uses the `development` GitHub environment and expects:
+
+- `ADMIN_USERNAME`
+- `ADMIN_EMAIL`
+
+Other values used during CI (database/JWT/admin password) are set to test defaults inside the workflow.
+
 
 ## Project Structure
 
 ```
 platr/
+├── .github/
+│   └── workflows/
+│       └── backend-ci.yml
 └── platr-backend/
     └── src/main/kotlin/com/Platr/api/
         ├── controller/    # REST controllers
