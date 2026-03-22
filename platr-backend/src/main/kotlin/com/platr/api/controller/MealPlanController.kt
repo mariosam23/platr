@@ -1,7 +1,7 @@
 package com.platr.api.controller
 
-import com.platr.api.dto.MealPlanDto
-import com.platr.api.dto.MealPlanRequest
+import com.platr.api.dto.request.MealPlanDto
+import com.platr.api.dto.request.MealPlanRequest
 import com.platr.api.service.MealPlanService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page

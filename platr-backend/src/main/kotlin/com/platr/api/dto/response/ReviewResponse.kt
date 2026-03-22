@@ -1,4 +1,4 @@
-package com.platr.api.dto
+package com.platr.api.dto.response
 
 import java.time.Instant
 import java.util.UUID

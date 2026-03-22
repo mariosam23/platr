@@ -1,4 +1,4 @@
-package com.platr.api.dto
+package com.platr.api.dto.response
 
 data class AuthResponse(
     val jwtToken: String,

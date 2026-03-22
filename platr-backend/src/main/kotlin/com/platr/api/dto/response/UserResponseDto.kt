@@ -1,4 +1,4 @@
-package com.platr.api.dto
+package com.platr.api.dto.response
 
 import com.platr.api.entity.User
 import com.platr.api.enums.Role

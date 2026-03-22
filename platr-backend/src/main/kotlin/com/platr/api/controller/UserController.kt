@@ -1,7 +1,7 @@
 package com.platr.api.controller
 
-import com.platr.api.dto.UserResponseDto
-import com.platr.api.dto.toResponseDto
+import com.platr.api.dto.response.UserResponseDto
+import com.platr.api.dto.response.toResponseDto
 import com.platr.api.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize

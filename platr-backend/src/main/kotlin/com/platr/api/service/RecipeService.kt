@@ -1,10 +1,10 @@
 package com.platr.api.service
 
-import com.platr.api.dto.RecipeDetailDto
-import com.platr.api.dto.RecipeRequest
-import com.platr.api.dto.RecipeSummaryDto
-import com.platr.api.dto.ReviewRequest
-import com.platr.api.dto.ReviewResponse
+import com.platr.api.dto.response.RecipeDetailDto
+import com.platr.api.dto.request.RecipeRequest
+import com.platr.api.dto.response.RecipeSummaryDto
+import com.platr.api.dto.request.ReviewRequest
+import com.platr.api.dto.response.ReviewResponse
 import com.platr.api.dto.toRecipeDetailDto
 import com.platr.api.dto.toRecipeSummaryDto
 import com.platr.api.dto.toReviewResponse

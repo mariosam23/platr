@@ -1,4 +1,4 @@
-package com.platr.api.dto
+package com.platr.api.dto.request
 
 import com.platr.api.enums.RecipeDifficulty
 import jakarta.validation.Valid

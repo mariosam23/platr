@@ -1,9 +1,9 @@
 package com.platr.api.controller
 
-import com.platr.api.dto.AuthResponse
-import com.platr.api.dto.LoginRequest
-import com.platr.api.dto.RefreshTokenRequest
-import com.platr.api.dto.RegisterRequest
+import com.platr.api.dto.response.AuthResponse
+import com.platr.api.dto.request.LoginRequest
+import com.platr.api.dto.request.RefreshTokenRequest
+import com.platr.api.dto.request.RegisterRequest
 import com.platr.api.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

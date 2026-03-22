@@ -1,9 +1,9 @@
 package com.platr.api.service
 
 import com.platr.api.config.AuthenticatedUserPrincipal
-import com.platr.api.dto.AuthResponse
-import com.platr.api.dto.LoginRequest
-import com.platr.api.dto.RegisterRequest
+import com.platr.api.dto.response.AuthResponse
+import com.platr.api.dto.request.LoginRequest
+import com.platr.api.dto.request.RegisterRequest
 import com.platr.api.dto.toUser
 import com.platr.api.enums.Role
 import jakarta.transaction.Transactional

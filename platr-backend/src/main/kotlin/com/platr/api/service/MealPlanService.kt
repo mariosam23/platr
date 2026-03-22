@@ -1,7 +1,7 @@
 package com.platr.api.service
 
-import com.platr.api.dto.MealPlanDto
-import com.platr.api.dto.MealPlanRequest
+import com.platr.api.dto.request.MealPlanDto
+import com.platr.api.dto.request.MealPlanRequest
 import com.platr.api.dto.toMealPlanDto
 import com.platr.api.entity.MealPlan
 import com.platr.api.entity.MealPlanRecipe
