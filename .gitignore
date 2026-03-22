@@ -7,6 +7,9 @@ build/
 project.md
 .env
 
+*.ps1
+*.postman*
+
 ### STS ###
 .apt_generated
 .classpath
