@@ -1,17 +1,14 @@
-const API_BASE_URL = 'http://localhost:8080/api'; // Replace with your actual backend URL
+import axios from 'axios';
 
-export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
-        ...options,
-    });
-    
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    
-    return response.json();
-};
+// Backend runs on port 9023 as per README
+export const API_BASE_URL = 'http://localhost:9023/api';
+
+const api = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+
+export default api;

@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import NavBar from './components/NavBar';
+import { Home } from './pages/Home';
+import './styles/App.css';
+
+// Placeholder Pages
+const Login = () => <div className="page"><h1>Login</h1></div>;
+const Register = () => <div className="page"><h1>Register</h1></div>;
+const RecipesTable = () => <div className="page"><h1>Recipes</h1></div>;
+const MealPlansTable = () => <div className="page"><h1>Meal Plans</h1></div>;
+const FeedbackForm = () => <div className="page"><h1>Feedback</h1></div>;
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <BrowserRouter>
+      <NavBar />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/recipes" element={<RecipesTable />} />
+          <Route path="/mealplans" element={<MealPlansTable />} />
+          <Route path="/feedback" element={<FeedbackForm />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </BrowserRouter>
   )
 }
 
-export default App
+export default App;
