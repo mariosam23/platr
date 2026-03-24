@@ -1,14 +1,6 @@
-import axios from 'axios';
+import createClient from 'openapi-fetch'
+import type { paths } from '../types/api'
 
-// Backend runs on port 9023 as per README
-export const API_BASE_URL = 'http://localhost:9023/api';
+const client = createClient<paths>({ baseUrl: 'http://localhost:9023' });
 
-const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-
-export default api;
+export default client;
