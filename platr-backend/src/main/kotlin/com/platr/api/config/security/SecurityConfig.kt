@@ -33,6 +33,8 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/recipes", "/api/recipes/**")
                     .permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                    .permitAll()
                     .anyRequest()
                     .authenticated()
             }.sessionManagement {
