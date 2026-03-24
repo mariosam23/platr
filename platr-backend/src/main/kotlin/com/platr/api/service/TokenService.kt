@@ -50,6 +50,7 @@ class TokenService(
             .builder()
             .subject(principal.username) // email
             .claim("userId", principal.id.toString())
+            .claim("username", principal.displayUsername)
             .claim("role", primaryRole)
             .claim("type", type)
             .issuedAt(now)

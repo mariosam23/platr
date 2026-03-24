@@ -5,14 +5,12 @@ import com.platr.api.dto.response.AuthResponse
 import com.platr.api.dto.request.LoginRequest
 import com.platr.api.dto.request.RegisterRequest
 import com.platr.api.dto.toUser
-import com.platr.api.enums.Role
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -43,8 +41,6 @@ class AuthService(
         return AuthResponse(
             jwtToken = accessToken,
             refreshToken = refreshToken,
-            username = userToCreate.username,
-            role = resolvePrimaryRole(userDetails.authorities),
         )
     }
 
@@ -62,14 +58,11 @@ class AuthService(
         val userDetails = userDetailsService.loadUserByUsername(request.email) as AuthenticatedUserPrincipal
         val accessToken = tokenService.generateAccessToken(userDetails)
         val refreshToken = tokenService.generateRefreshToken(userDetails)
-        val user = userService.findByEmail(request.email)
 
         logger.info("User logged in: ${request.email}")
         return AuthResponse(
             jwtToken = accessToken,
             refreshToken = refreshToken,
-            username = user?.username ?: userDetails.username,
-            role = resolvePrimaryRole(userDetails.authorities),
         )
     }
 
@@ -87,20 +80,10 @@ class AuthService(
 
         val newAccessToken = tokenService.generateAccessToken(userDetails)
         val newRefreshToken = tokenService.generateRefreshToken(userDetails)
-        val user = userService.findByEmail(email)
 
         return AuthResponse(
             jwtToken = newAccessToken,
             refreshToken = newRefreshToken,
-            username = user?.username ?: userDetails.username,
-            role = resolvePrimaryRole(userDetails.authorities),
         )
     }
-
-    private fun resolvePrimaryRole(authorities: Collection<GrantedAuthority>): String =
-        authorities
-            .firstOrNull()
-            ?.authority
-            ?.removePrefix("ROLE_")
-            ?: Role.USER.name
 }

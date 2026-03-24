@@ -21,6 +21,7 @@ class CustomUserDetailsService(
 
         return AuthenticatedUserPrincipal(
             id = user.userId ?: throw UsernameNotFoundException("User id missing for email $username"),
+            displayUsername = user.username,
             email = user.email,
             passwordHash = user.hashedPassword,
             grantedAuthorities = user.roles.map { SimpleGrantedAuthority("ROLE_${it.name}") },

@@ -6,6 +6,7 @@ import java.util.UUID
 
 data class AuthenticatedUserPrincipal(
     val id: UUID,
+    val displayUsername: String,
     private val email: String,
     private val passwordHash: String,
     private val grantedAuthorities: Collection<GrantedAuthority>,
