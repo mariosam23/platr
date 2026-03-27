@@ -152,7 +152,7 @@ platr/
 │   └── workflows/
 │       └── backend-ci.yml
 └── platr-backend/
-    └── src/main/kotlin/com/Platr/api/
+    └── src/main/kotlin/com/platr/api/
         ├── controller/    # REST controllers
         ├── service/       # Business logic
         ├── repository/    # Spring Data JPA repositories
