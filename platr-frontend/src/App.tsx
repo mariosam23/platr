@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import './styles/App.css';
 import { Register } from './pages/Register';
+import { RecipeDetail } from './pages/RecipeDetail';
 import { Recipes } from './pages/Recipes';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/recipes/:id" element={<RecipeDetail />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/recipes" element={<Recipes />} />
           </Route>

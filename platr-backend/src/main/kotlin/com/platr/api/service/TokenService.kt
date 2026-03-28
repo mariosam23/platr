@@ -3,6 +3,7 @@ package com.platr.api.service
 import com.platr.api.config.AuthenticatedUserPrincipal
 import com.platr.api.config.JwtConfig
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -94,6 +95,8 @@ class TokenService(
                 .build()
                 .parseSignedClaims(token)
                 .payload
+        } catch (e: ExpiredJwtException) {
+            e.claims
         } catch (e: JwtException) {
             logger.error("JWT parsing error: ${e.message}")
             null // Handles expired, malformed, or invalid signature tokens
