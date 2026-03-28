@@ -78,6 +78,12 @@
   color: #dc3545 !important;
 }
 
+.nav-username {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
 .nav-btn-danger:hover {
   background-color: #dc3545;
   color: white !important;

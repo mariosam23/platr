@@ -285,7 +285,6 @@ export interface components {
             /** Format: email */
             email: string;
             password: string;
-            displayedName: string;
         };
         AuthResponse: {
             jwtToken?: string;
@@ -302,7 +301,6 @@ export interface components {
         UserResponseDto: {
             username?: string;
             email?: string;
-            displayedName?: string;
             roles?: ("USER" | "ADMIN")[];
             /** Format: date-time */
             createdAt?: string;

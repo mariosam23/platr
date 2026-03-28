@@ -20,11 +20,6 @@ const schema = yup.object({
         .string()
         .email('Must be a valid email address')
         .required('Email is required'),
-    displayName: yup
-        .string()
-        .min(3, 'Display name must be at least 3 characters')
-        .max(50, 'Display name must be at most 50 characters')
-        .required('Display name is required'),
     password: yup
         .string()
         .min(8, 'Password must be at least 8 characters')
@@ -62,7 +57,6 @@ export const Register: React.FC = () => {
             }>('/api/auth/register', {
                 username: data.username,
                 email: data.email,
-                displayedName: data.displayName,
                 password: data.password,
             });
 
@@ -78,7 +72,6 @@ export const Register: React.FC = () => {
                 const fieldMap: Record<string, keyof RegisterFormData> = {
                     username: 'username',
                     email: 'email',
-                    displayedName: 'displayName',
                     password: 'password',
                 };
 
@@ -141,21 +134,6 @@ export const Register: React.FC = () => {
                     {errors.email && (
                         <p role="alert" className="auth-field-error">
                             {errors.email.message}
-                        </p>
-                    )}
-                </div>
-
-                <div className="auth-field">
-                    <label htmlFor="displayName">Display Name</label>
-                    <input
-                        id="displayName"
-                        type="text"
-                        autoComplete="nickname"
-                        {...register('displayName')}
-                    />
-                    {errors.displayName && (
-                        <p role="alert" className="auth-field-error">
-                            {errors.displayName.message}
                         </p>
                     )}
                 </div>

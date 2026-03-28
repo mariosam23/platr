@@ -24,7 +24,6 @@ class ApplicationInitializer(
                     username = adminUsername,
                     email = adminEmail,
                     hashedPassword = passwordEncoder.encode(adminPassword) ?: throw IllegalStateException("Failed to encode password"),
-                    displayedName = "Admin",
                     roles = setOf(Role.ADMIN),
                     recipes = mutableListOf(),
                     mealPlans = mutableListOf(),

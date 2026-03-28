@@ -30,8 +30,6 @@ class User(
     var email: String,
     @Column(nullable = false)
     var hashedPassword: String,
-    @Column(nullable = false, length = 50)
-    var displayedName: String,
     @ElementCollection(targetClass = Role::class, fetch = FetchType.LAZY)
     @CollectionTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")])
     @Enumerated(EnumType.STRING)

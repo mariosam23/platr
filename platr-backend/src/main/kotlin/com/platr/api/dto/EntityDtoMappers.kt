@@ -55,7 +55,6 @@ fun RegisterRequest.toUser(passwordEncoder: PasswordEncoder) =
         username = this.username,
         email = this.email,
         hashedPassword = passwordEncoder.encode(this.password) ?: throw IllegalStateException("Failed to encode password"),
-        displayedName = this.displayedName,
         roles = setOf(Role.USER),
     )
 

@@ -14,7 +14,4 @@ data class RegisterRequest(
     @field:NotBlank(message = "Password is required")
     @field:Size(min = 8, max = 72, message = "Password must be at least 8 characters")
     val password: String,
-    @field:NotBlank(message = "Display name is required")
-    @field:Size(min = 3, max = 50, message = "Display name must be between 3 and 50 chars")
-    val displayedName: String,
 )

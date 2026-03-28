@@ -3,12 +3,14 @@ import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
     sub: string;
+    username: string;
     role: string;
     exp: number;
 }
 
 interface AuthUser {
-    username: string;
+    email: string;
+    displayName: string;
     role: string;
 }
 
@@ -21,7 +23,7 @@ interface AuthState {
 function parseUser(token: string): AuthUser | null {
     try {
         const decoded = jwtDecode<JwtPayload>(token);
-        return { username: decoded.sub, role: decoded.role };
+        return { email: decoded.sub, displayName: decoded.username, role: decoded.role };
     } catch {
         return null;
     }

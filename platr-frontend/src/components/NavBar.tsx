@@ -1,8 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '../store/store';
+import { logout } from '../store/authSlice';
 import '../styles/NavBar.css';
 
 const NavBar = () => {
-    const isAuthenticated = false; // todo
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { token, user } = useSelector((state: RootState) => state.auth);
+    const isAuthenticated = !!token;
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/');
+    };
 
     return (
         <nav className="navbar">
@@ -21,7 +32,10 @@ const NavBar = () => {
                         <li><Link to="/register" className="nav-btn nav-btn-primary">Register</Link></li>
                     </>
                 ) : (
-                    <li><button className="nav-btn nav-btn-danger">Logout</button></li>
+                    <>
+                        {user && <li className="nav-username">{user.displayName}</li>}
+                        <li><button className="nav-btn nav-btn-danger" onClick={handleLogout}>Logout</button></li>
+                    </>
                 )}
             </ul>
         </nav>
