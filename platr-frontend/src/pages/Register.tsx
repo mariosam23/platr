@@ -8,7 +8,7 @@ import axiosInstance from '../services/axiosInstance';
 import { setCredentials } from '../store/authSlice';
 import { useAppDispatch } from '../hooks/useAppStore';
 import { PlatrRoutes } from '../application/routes';
-import '../styles/Register.css';
+import '../styles/AuthForm.css';
 
 const schema = yup.object({
     username: yup
@@ -57,7 +57,7 @@ export const Register: React.FC = () => {
 
         try {
             const { data: res } = await axiosInstance.post<{
-                token: string;
+                jwtToken: string;
                 refreshToken: string;
             }>('/api/auth/register', {
                 username: data.username,
@@ -66,8 +66,8 @@ export const Register: React.FC = () => {
                 password: data.password,
             });
 
-            dispatch(setCredentials({ token: res.token, refreshToken: res.refreshToken }));
-            navigate(PlatrRoutes.Recipes);
+            dispatch(setCredentials({ token: res.jwtToken, refreshToken: res.refreshToken }));
+            navigate(PlatrRoutes.Login);
         } catch (err) {
             if (isAxiosError(err) && err.response?.data) {
                 const body = err.response.data as {
@@ -84,6 +84,7 @@ export const Register: React.FC = () => {
 
                 if (body.errors && typeof body.errors === 'object') {
                     let hadFieldError = false;
+                    
                     for (const [field, message] of Object.entries(body.errors)) {
                         const formField = fieldMap[field];
                         if (formField) {
@@ -91,6 +92,7 @@ export const Register: React.FC = () => {
                             hadFieldError = true;
                         }
                     }
+                    
                     if (!hadFieldError) {
                         setServerError(body.message ?? 'Registration failed. Please try again.');
                     }
@@ -106,14 +108,14 @@ export const Register: React.FC = () => {
     return (
         <div className="page">
             <h1>Register</h1>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate className="register-form">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="auth-form">
                 {serverError && (
-                    <p role="alert" className="register-server-error">
+                    <p role="alert" className="auth-server-error">
                         {serverError}
                     </p>
                 )}
 
-                <div className="register-field">
+                <div className="auth-field">
                     <label htmlFor="username">Username</label>
                     <input
                         id="username"
@@ -122,13 +124,13 @@ export const Register: React.FC = () => {
                         {...register('username')}
                     />
                     {errors.username && (
-                        <p role="alert" className="register-field-error">
+                        <p role="alert" className="auth-field-error">
                             {errors.username.message}
                         </p>
                     )}
                 </div>
 
-                <div className="register-field">
+                <div className="auth-field">
                     <label htmlFor="email">Email</label>
                     <input
                         id="email"
@@ -137,13 +139,13 @@ export const Register: React.FC = () => {
                         {...register('email')}
                     />
                     {errors.email && (
-                        <p role="alert" className="register-field-error">
+                        <p role="alert" className="auth-field-error">
                             {errors.email.message}
                         </p>
                     )}
                 </div>
 
-                <div className="register-field">
+                <div className="auth-field">
                     <label htmlFor="displayName">Display Name</label>
                     <input
                         id="displayName"
@@ -152,13 +154,13 @@ export const Register: React.FC = () => {
                         {...register('displayName')}
                     />
                     {errors.displayName && (
-                        <p role="alert" className="register-field-error">
+                        <p role="alert" className="auth-field-error">
                             {errors.displayName.message}
                         </p>
                     )}
                 </div>
 
-                <div className="register-field">
+                <div className="auth-field">
                     <label htmlFor="password">Password</label>
                     <input
                         id="password"
@@ -167,13 +169,13 @@ export const Register: React.FC = () => {
                         {...register('password')}
                     />
                     {errors.password && (
-                        <p role="alert" className="register-field-error">
+                        <p role="alert" className="auth-field-error">
                             {errors.password.message}
                         </p>
                     )}
                 </div>
 
-                <div className="register-field">
+                <div className="auth-field">
                     <label htmlFor="confirmPassword">Confirm Password</label>
                     <input
                         id="confirmPassword"
@@ -182,7 +184,7 @@ export const Register: React.FC = () => {
                         {...register('confirmPassword')}
                     />
                     {errors.confirmPassword && (
-                        <p role="alert" className="register-field-error">
+                        <p role="alert" className="auth-field-error">
                             {errors.confirmPassword.message}
                         </p>
                     )}
@@ -192,7 +194,7 @@ export const Register: React.FC = () => {
                     {isSubmitting ? 'Registering…' : 'Register'}
                 </button>
 
-                <p className="register-login-hint">
+                <p className="auth-hint">
                     Already have an account? <Link to={PlatrRoutes.Login}>Log in</Link>
                 </p>
             </form>

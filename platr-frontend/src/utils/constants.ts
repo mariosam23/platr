@@ -2,4 +2,9 @@ const APIResponse = {
     UNAUTHORIZED: 401,
 } as const;
 
-export { APIResponse };
+const APIEndpoint = {
+    LOGIN: '/api/auth/login',
+    REGISTER: '/api/auth/register',
+}
+
+export { APIResponse, APIEndpoint };

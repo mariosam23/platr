@@ -66,11 +66,11 @@ axiosInstance.interceptors.response.use(
             );
 
             store.dispatch(
-                setCredentials({ token: data.token, refreshToken: data.refreshToken })
+                setCredentials({ token: data.jwtToken, refreshToken: data.refreshToken })
             );
 
-            drainQueue(data.token, null);
-            original.headers.Authorization = `Bearer ${data.token}`;
+            drainQueue(data.jwtToken, null);
+            original.headers.Authorization = `Bearer ${data.jwtToken}`;
             return axiosInstance(original);
         } catch (refreshError) {
             drainQueue(null, refreshError);
