@@ -69,6 +69,38 @@
     min-height: 150px;
 }
 
+.feedback-fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.feedback-fieldset legend {
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 0.45rem;
+}
+
+.feedback-radio-group {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.feedback-radio-label,
+.feedback-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.feedback-radio-label input,
+.feedback-checkbox-label input {
+    accent-color: var(--color-primary, #4f8ef7);
+    cursor: pointer;
+}
+
 .feedback-help,
 .feedback-status p,
 .feedback-secondary-link {

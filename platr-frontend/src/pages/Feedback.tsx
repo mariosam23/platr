@@ -6,6 +6,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { PlatrRoutes } from '../application/routes';
 import {
 	createReviewFormValues,
+	RECOMMEND_OPTIONS,
 	REVIEW_RATING_OPTIONS,
 	reviewFormSchema,
 	type ReviewFormValues,
@@ -158,6 +159,26 @@ export const Feedback: React.FC = () => {
 								{...register('text')}
 							/>
 							{errors.text?.message ? <p className="feedback-field-error">{errors.text.message}</p> : null}
+						</div>
+
+						<fieldset className="feedback-field feedback-fieldset">
+							<legend>Would you recommend this recipe?</legend>
+							<div className="feedback-radio-group">
+								{RECOMMEND_OPTIONS.map((option) => (
+									<label key={option} className="feedback-radio-label">
+										<input type="radio" value={option} {...register('recommend')} />
+										{option === 'yes' ? 'Yes' : 'No'}
+									</label>
+								))}
+							</div>
+							{errors.recommend?.message ? <p className="feedback-field-error">{errors.recommend.message}</p> : null}
+						</fieldset>
+
+						<div className="feedback-field">
+							<label className="feedback-checkbox-label">
+								<input type="checkbox" {...register('hasTried')} />
+								I have tried cooking this recipe
+							</label>
 						</div>
 
 						{selectedRecipeId ? (

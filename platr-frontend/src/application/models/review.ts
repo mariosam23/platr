@@ -3,9 +3,14 @@ import type { components } from '../../types/api';
 
 export type ReviewRequest = components['schemas']['ReviewRequest'];
 
+export const RECOMMEND_OPTIONS = ['yes', 'no'] as const;
+export type RecommendOption = (typeof RECOMMEND_OPTIONS)[number];
+
 export interface ReviewFormValues {
     recipeId: string;
     rating: number;
+    recommend: RecommendOption;
+    hasTried: boolean;
     text: string;
 }
 
@@ -21,6 +26,11 @@ export const reviewFormSchema: yup.ObjectSchema<ReviewFormValues> = yup.object({
         .integer('Rating must be a whole number')
         .min(1, 'Rating must be at least 1')
         .max(5, 'Rating cannot be more than 5'),
+    recommend: yup
+        .string<RecommendOption>()
+        .oneOf([...RECOMMEND_OPTIONS], 'Please select an option')
+        .required('Please indicate whether you would recommend this recipe'),
+    hasTried: yup.boolean().required().default(false),
     text: yup.string().trim().required('Review text is required').max(1000, 'Max 1000 characters'),
 });
 
@@ -28,6 +38,8 @@ export function createReviewFormValues(recipeId?: string | null): ReviewFormValu
     return {
         recipeId: recipeId?.trim() ?? '',
         rating: 5,
+        recommend: 'yes',
+        hasTried: false,
         text: '',
     };
 }
