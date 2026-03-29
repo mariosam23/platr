@@ -23,6 +23,7 @@ class AuthService(
     private val tokenService: TokenService,
     private val userService: UserService,
     private val passwordEncoder: PasswordEncoder,
+    private val emailService: EmailService,
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(AuthService::class.java)
@@ -38,6 +39,8 @@ class AuthService(
         val refreshToken = tokenService.generateRefreshToken(userDetails)
 
         logger.info("New user registered: ${userRequest.email}")
+        emailService.sendWelcomeEmail(userRequest.email, userRequest.username)
+
         return AuthResponse(
             jwtToken = accessToken,
             refreshToken = refreshToken,
