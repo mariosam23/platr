@@ -1,9 +1,9 @@
 package com.platr.api.service
 
 import com.platr.api.config.AuthenticatedUserPrincipal
-import com.platr.api.dto.response.AuthResponse
 import com.platr.api.dto.request.LoginRequest
 import com.platr.api.dto.request.RegisterRequest
+import com.platr.api.dto.response.AuthResponse
 import com.platr.api.dto.toUser
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory

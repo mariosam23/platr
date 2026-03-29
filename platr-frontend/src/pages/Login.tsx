@@ -1,30 +1,20 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { isAxiosError } from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import axiosInstance from '../services/axiosInstance';
+import { useForm } from 'react-hook-form';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { type LoginFormData, loginSchema } from '../application/models/auth';
 import { setCredentials } from '../store/authSlice';
-import { useAppDispatch } from '../hooks/useAppStore';
+import { useAppDispatch, useAppSelector } from '../hooks/useAppStore';
 import { PlatrRoutes } from '../application/routes';
+import { AuthField } from '../presentation/auth/AuthField';
+import { loginUser } from '../services/authService';
 import '../styles/AuthForm.css';
-import { APIEndpoint } from '../utils/constants';
-
-const schema = yup.object({
-    email: yup
-        .string()
-        .email('Must be a valid email address')
-        .required('Email is required'),
-    password: yup
-        .string()
-        .required('Password is required'),
-});
-
-type LoginFormData = yup.InferType<typeof schema>;
+import { getApiErrorMessage } from '../utils/apiErrors';
 
 export const Login: React.FC = () => {
     const dispatch = useAppDispatch();
+    const token = useAppSelector((state) => state.auth.token);
     const navigate = useNavigate();
     const [serverError, setServerError] = useState<string | null>(null);
 
@@ -33,80 +23,74 @@ export const Login: React.FC = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<LoginFormData>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(loginSchema),
     });
 
-    const onSubmit = async (data: LoginFormData) => {
+    if (token) {
+        return <Navigate to={PlatrRoutes.Recipes} replace />;
+    }
+
+    const onSubmit = async (formData: LoginFormData) => {
         setServerError(null);
 
         try {
-            const { data: res } = await axiosInstance.post<{
-                jwtToken: string;
-                refreshToken: string;
-            }>(APIEndpoint.LOGIN, {
-                email: data.email,
-                password: data.password,
-            });
+            const tokens = await loginUser(formData);
 
-            dispatch(setCredentials({ token: res.jwtToken, refreshToken: res.refreshToken }));
+            dispatch(setCredentials({ token: tokens.jwtToken, refreshToken: tokens.refreshToken }));
             navigate(PlatrRoutes.Recipes);
-        } catch (err) {
-            if (isAxiosError(err) && err.response) {
+        } catch (error) {
+            if (isAxiosError(error) && error.response?.status === 401) {
                 setServerError('Invalid credentials. Please try again.');
             } else {
-                setServerError('An unexpected error occurred. Please try again.');
+                setServerError(getApiErrorMessage(error, 'An unexpected error occurred. Please try again.'));
             }
         }
     };
 
     return (
-        <div className="page">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate className="auth-form">
-                {serverError && (
-                    <p role="alert" className="auth-server-error">
-                        {serverError}
-                    </p>
-                )}
+        <div className="page auth-page">
+            <div className="auth-shell">
+                <section className="auth-card">
+                    <div className="auth-heading">
+                        <h1>Login</h1>
+                        <p className="auth-subtitle">Access your saved recipes, meal plans, and reviews.</p>
+                    </div>
 
-                <div className="auth-field">
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        autoComplete="email"
-                        {...register('email')}
-                    />
-                    {errors.email && (
-                        <p role="alert" className="auth-field-error">
-                            {errors.email.message}
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate className="auth-form">
+                        {serverError && (
+                            <p role="alert" className="app-message app-message-error auth-server-error">
+                                {serverError}
+                            </p>
+                        )}
+
+                        <AuthField
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            label="Email"
+                            error={errors.email?.message}
+                            {...register('email')}
+                        />
+
+                        <AuthField
+                            id="password"
+                            type="password"
+                            autoComplete="current-password"
+                            label="Password"
+                            error={errors.password?.message}
+                            {...register('password')}
+                        />
+
+                        <button type="submit" disabled={isSubmitting} className="app-button app-button-primary auth-submit">
+                            {isSubmitting ? 'Logging in…' : 'Log in'}
+                        </button>
+
+                        <p className="auth-hint">
+                            Don't have an account? <Link to={PlatrRoutes.Register}>Register</Link>
                         </p>
-                    )}
-                </div>
-
-                <div className="auth-field">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        autoComplete="current-password"
-                        {...register('password')}
-                    />
-                    {errors.password && (
-                        <p role="alert" className="auth-field-error">
-                            {errors.password.message}
-                        </p>
-                    )}
-                </div>
-
-                <button type="submit" disabled={isSubmitting} className="nav-btn nav-btn-primary">
-                    {isSubmitting ? 'Logging in…' : 'Log in'}
-                </button>
-
-                <p className="auth-hint">
-                    Don't have an account? <Link to={PlatrRoutes.Register}>Register</Link>
-                </p>
-            </form>
+                    </form>
+                </section>
+            </div>
         </div>
     );
 };

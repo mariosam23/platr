@@ -6,9 +6,11 @@ import com.platr.api.dto.toMealPlanDto
 import com.platr.api.entity.MealPlan
 import com.platr.api.entity.MealPlanRecipe
 import com.platr.api.entity.User
+import com.platr.api.exception.DuplicateMealPlanAssignmentException
 import com.platr.api.exception.MealPlanNotFoundException
 import com.platr.api.exception.RecipeNotFoundException
 import com.platr.api.exception.UserNotFoundException
+import com.platr.api.repository.MealPlanRecipeRepository
 import com.platr.api.repository.MealPlanRepository
 import com.platr.api.repository.RecipeRepository
 import com.platr.api.repository.UserRepository
@@ -22,6 +24,7 @@ import java.util.UUID
 @Service
 class MealPlanService(
     private val mealPlanRepository: MealPlanRepository,
+    private val mealPlanRecipeRepository: MealPlanRecipeRepository,
     private val recipeRepository: RecipeRepository,
     private val userRepository: UserRepository,
 ) {
@@ -59,6 +62,7 @@ class MealPlanService(
         userEmail: String,
     ): MealPlanDto {
         val user = findUserByEmailOrThrow(userEmail)
+        validateUniqueAssignments(request)
 
         val mealPlan =
             MealPlan(
@@ -83,6 +87,7 @@ class MealPlanService(
         userEmail: String,
     ): MealPlanDto {
         findUserByEmailOrThrow(userEmail)
+        validateUniqueAssignments(request)
 
         val mealPlan =
             mealPlanRepository
@@ -93,6 +98,7 @@ class MealPlanService(
         mealPlan.notes = request.notes
 
         mealPlan.mealPlanRecipes.clear()
+        mealPlanRecipeRepository.flush()
         val mealPlanRecipes = toMealPlanRecipes(mealPlan, request)
         mealPlan.mealPlanRecipes.addAll(mealPlanRecipes)
 
@@ -109,6 +115,21 @@ class MealPlanService(
 
         mealPlanRepository.deleteById(planId)
         logger.info("Deleted meal plan with ID: $planId")
+    }
+
+    private fun validateUniqueAssignments(request: MealPlanRequest) {
+        val duplicateAssignment =
+            request.assignments
+                .groupBy { it.mealType to it.dayOfWeek }
+                .entries
+                .firstOrNull { (_, assignments) -> assignments.size > 1 }
+
+        if (duplicateAssignment != null) {
+            val (mealType, dayOfWeek) = duplicateAssignment.key
+            throw DuplicateMealPlanAssignmentException(
+                "Duplicate assignment for $mealType on $dayOfWeek is not allowed",
+            )
+        }
     }
 
     private fun toMealPlanRecipes(

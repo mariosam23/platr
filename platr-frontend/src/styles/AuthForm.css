@@ -1,34 +1,85 @@
-/* Shared styles for Login and Register forms */
+.auth-page {
+    display: flex;
+    justify-content: center;
+}
+
+.auth-shell {
+    width: min(100%, 480px);
+}
+
+.auth-card {
+    padding: 1.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: 28px;
+    background:
+        linear-gradient(160deg, rgba(79, 142, 247, 0.1), transparent 28%),
+        var(--color-surface-strong);
+    box-shadow: var(--color-shadow);
+}
+
+.auth-heading {
+    margin-bottom: 1.5rem;
+}
+
+.auth-heading h1 {
+    margin: 0 0 0.45rem;
+}
+
+.auth-subtitle {
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
 .auth-form {
-    max-width: 400px;
+    display: grid;
+    gap: 1rem;
+    max-width: none;
 }
 
 .auth-field {
-    margin-bottom: 1rem;
+    display: grid;
+    gap: 0.45rem;
 }
 
 .auth-field label {
     display: block;
+    font-weight: 600;
+    font-size: 0.92rem;
 }
 
 .auth-field input {
     display: block;
     width: 100%;
-    margin-top: 0.25rem;
+    margin-top: 0;
     box-sizing: border-box;
 }
 
 .auth-server-error {
-    color: red;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .auth-field-error {
-    color: red;
+    color: var(--color-danger);
     font-size: 0.875rem;
-    margin: 0.25rem 0 0;
+    margin: 0;
+}
+
+.auth-submit {
+    width: 100%;
+    margin-top: 0.25rem;
 }
 
 .auth-hint {
-    margin-top: 1rem;
+    margin: 0.25rem 0 0;
+    color: var(--color-text-muted);
+}
+
+.auth-hint a {
+    color: var(--color-link);
+}
+
+@media (max-width: 640px) {
+    .auth-card {
+        padding: 1.2rem;
+    }
 }

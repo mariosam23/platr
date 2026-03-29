@@ -1,0 +1,155 @@
+.feedback-page {
+    display: flex;
+    justify-content: center;
+}
+
+.feedback-shell {
+    width: min(100%, 940px);
+    display: grid;
+    gap: 1.5rem;
+}
+
+.feedback-hero {
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(79, 142, 247, 0.16), transparent 45%), var(--color-surface-strong);
+    box-shadow: var(--color-shadow);
+}
+
+.feedback-eyebrow {
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.78rem;
+    color: var(--color-warning);
+}
+
+.feedback-hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.feedback-copy {
+    max-width: 58ch;
+    margin: 1rem 0 0;
+    color: var(--color-text-muted);
+}
+
+.feedback-card {
+    padding: 1.5rem 1.75rem;
+    border-radius: 24px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: var(--color-shadow-soft);
+}
+
+.feedback-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.feedback-field {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.feedback-field label {
+    font-weight: 600;
+}
+
+.feedback-field select,
+.feedback-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.feedback-field textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.feedback-fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.feedback-fieldset legend {
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 0.45rem;
+}
+
+.feedback-radio-group {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.feedback-radio-label,
+.feedback-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.feedback-radio-label input,
+.feedback-checkbox-label input {
+    accent-color: var(--color-primary, #4f8ef7);
+    cursor: pointer;
+}
+
+.feedback-help,
+.feedback-status p,
+.feedback-secondary-link {
+    color: var(--color-text-muted);
+}
+
+.feedback-error,
+.feedback-field-error {
+    margin: 0;
+    color: var(--color-danger);
+}
+
+.feedback-status {
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-soft);
+}
+
+.feedback-status-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.feedback-status [role='alert'] {
+    padding: 0.75rem 0.9rem;
+    border-radius: 14px;
+    border: 1px solid rgba(248, 113, 113, 0.28);
+    background: rgba(248, 113, 113, 0.08);
+}
+
+.feedback-secondary-link {
+    text-decoration: none;
+}
+
+@media (max-width: 640px) {
+    .feedback-hero,
+    .feedback-card {
+        padding: 1.2rem;
+        border-radius: 20px;
+    }
+}
