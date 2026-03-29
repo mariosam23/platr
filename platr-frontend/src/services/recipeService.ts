@@ -125,7 +125,7 @@ function normalizeRecipePage(
 export async function fetchRecipes(filters: RecipeListFilters): Promise<RecipeListPage> {
     const params: Record<string, string | number> = {
         page: filters.page,
-        size: RECIPE_PAGE_SIZE,
+        size: filters.size ?? RECIPE_PAGE_SIZE,
     };
     const search = filters.search?.trim();
 
@@ -143,6 +143,11 @@ export async function fetchRecipes(filters: RecipeListFilters): Promise<RecipeLi
 
     const { data } = await axiosInstance.get<components['schemas']['PageRecipeSummaryDto']>(APIEndpoint.RECIPES, { params });
     return normalizeRecipePage(data, filters.page);
+}
+
+export async function fetchRecipeOptions(limit = 100): Promise<RecipeSummaryItem[]> {
+    const page = await fetchRecipes({ page: 0, size: limit });
+    return page.content;
 }
 
 export async function fetchRecipeDetail(id: string): Promise<RecipeDetailItem> {

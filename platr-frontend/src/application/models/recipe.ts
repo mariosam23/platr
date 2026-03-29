@@ -60,6 +60,7 @@ export interface RecipeListFilters {
     search?: string;
     categoryId?: string;
     ingredientIds?: string[];
+    size?: number;
 }
 
 export interface RecipeFormIngredient {
