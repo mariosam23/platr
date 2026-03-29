@@ -5,10 +5,10 @@ import io.mailtrap.config.MailtrapConfig
 import io.mailtrap.factory.MailtrapClientFactory
 import io.mailtrap.model.request.emails.Address
 import io.mailtrap.model.request.emails.MailtrapMail
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import jakarta.annotation.PostConstruct
 
 @Service
 class EmailService {
@@ -28,13 +28,17 @@ class EmailService {
             return
         }
         val config =
-            MailtrapConfig.Builder()
+            MailtrapConfig
+                .Builder()
                 .token(apiToken)
                 .build()
         client = MailtrapClientFactory.createMailtrapClient(config)
     }
 
-    fun sendWelcomeEmail(to: String, username: String) {
+    fun sendWelcomeEmail(
+        to: String,
+        username: String,
+    ) {
         val mailtrapClient = client
         if (mailtrapClient == null) {
             logger.warn("MailTrap client not initialized. Skipping welcome email to $to")
@@ -43,12 +47,14 @@ class EmailService {
 
         try {
             val mail =
-                MailtrapMail.builder()
+                MailtrapMail
+                    .builder()
                     .from(Address("hello@demomailtrap.co", "Platr API"))
                     .to(listOf(Address(to)))
                     .subject("Welcome to Platr, $username!")
-                    .text("Hello $username,\n\nWelcome to Platr! We're glad to have you on board. Start exploring recipes and creating meal plans today.\n\nBest,\nThe Platr Team")
-                    .category("Welcome Email")
+                    .text(
+                        "Hello $username,\n\nWelcome to Platr! We're glad to have you on board. Start exploring recipes and creating meal plans today.\n\nBest,\nThe Platr Team",
+                    ).category("Welcome Email")
                     .build()
 
             val response = mailtrapClient.send(mail)

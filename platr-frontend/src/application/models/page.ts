@@ -13,7 +13,7 @@ export interface SpringPage<T> extends SpringPageMetadata {
 }
 
 export function normalizeSpringPage<TRaw, T>(
-    page: {
+    data: {
         content?: TRaw[];
         totalPages?: number;
         totalElements?: number;
@@ -22,25 +22,41 @@ export function normalizeSpringPage<TRaw, T>(
         first?: boolean;
         last?: boolean;
         empty?: boolean;
+        page?: {
+            size?: number;
+            totalElements?: number;
+            totalPages?: number;
+            number?: number;
+        };
     },
     normalizeItem: (raw: TRaw) => T | null,
     fallbackPageNumber: number,
     defaultPageSize: number,
 ): SpringPage<T> {
-    const content = (page.content ?? []).flatMap((raw) => {
+    const content = (data.content ?? []).flatMap((raw) => {
         const item = normalizeItem(raw);
         return item ? [item] : [];
     });
 
+    // Handle both direct PageImpl fields and the Spring Boot 3.3.x PagedModel format
+    const totalPages = data.page?.totalPages ?? data.totalPages ?? 0;
+    const totalElements = data.page?.totalElements ?? data.totalElements ?? 0;
+    const size = data.page?.size ?? data.size ?? defaultPageSize;
+    const number = data.page?.number ?? data.number ?? fallbackPageNumber;
+    
+    // In PagedModel, first and last aren't explicitly provided, so we derive them
+    const first = data.first ?? number === 0;
+    const last = data.last ?? (totalPages > 0 ? number === totalPages - 1 : false);
+
     return {
         content,
-        totalPages: page.totalPages ?? 0,
-        totalElements: page.totalElements ?? 0,
-        size: page.size ?? defaultPageSize,
-        number: page.number ?? fallbackPageNumber,
-        first: page.first ?? fallbackPageNumber === 0,
-        last: page.last ?? false,
-        empty: page.empty ?? content.length === 0,
+        totalPages,
+        totalElements,
+        size,
+        number,
+        first,
+        last,
+        empty: data.empty ?? content.length === 0,
     };
 }
 

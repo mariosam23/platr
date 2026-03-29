@@ -39,8 +39,7 @@ class SecurityConfig(
                         "/api/categories/**",
                         "/api/ingredients",
                         "/api/ingredients/**",
-                    )
-                    .permitAll()
+                    ).permitAll()
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                     .permitAll()
                     .anyRequest()
