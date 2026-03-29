@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import type { SpringPage } from './page';
 import type { components } from '../../types/api';
 
 export type RecipeDifficulty = components['schemas']['RecipeRequest']['difficulty'];
@@ -44,16 +45,7 @@ export interface RecipeDetailItem extends RecipeSummaryItem {
     updatedAt: string | null;
 }
 
-export interface RecipeListPage {
-    content: RecipeSummaryItem[];
-    totalPages: number;
-    totalElements: number;
-    size: number;
-    number: number;
-    first: boolean;
-    last: boolean;
-    empty: boolean;
-}
+export interface RecipeListPage extends SpringPage<RecipeSummaryItem> {}
 
 export interface RecipeListFilters {
     page: number;

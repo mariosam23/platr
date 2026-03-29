@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { canManageRecipe, type RecipeRequest, type RecipeSummaryItem } from '../application/models/recipe';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { useAppSelector } from '../hooks/useAppStore';
-import { ConfirmModal } from '../presentation/recipes/ConfirmModal';
 import { RecipeFilters } from '../presentation/recipes/RecipeFilters';
 import { RecipeFormModal } from '../presentation/recipes/RecipeFormModal';
 import { modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
@@ -105,7 +105,6 @@ export const Recipes: React.FC = () => {
     });
 
     const recipes = data?.content ?? [];
-    const totalPages = data?.totalPages ?? 0;
 
     const openAddModal = () => {
         setPageError(null);
@@ -189,8 +188,7 @@ export const Recipes: React.FC = () => {
             ) : (
                 <RecipesTable
                     recipes={recipes}
-                    page={page}
-                    totalPages={totalPages}
+                    page={data}
                     isFetching={isFetching}
                     canManage={(recipe) => canManageRecipe(recipe, user)}
                     onEdit={openEditModal}
@@ -241,6 +239,7 @@ export const Recipes: React.FC = () => {
                     onConfirm={() => deleteMut.mutate(deleteTarget.recipeId)}
                     onCancel={() => setDeleteTarget(null)}
                     isLoading={deleteMut.isPending}
+                    ariaLabel="Delete recipe confirmation"
                 />
             ) : null}
         </div>

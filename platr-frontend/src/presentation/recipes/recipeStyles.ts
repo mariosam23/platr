@@ -44,21 +44,6 @@ export const errorTextStyle: React.CSSProperties = {
     marginBottom: '0.5rem',
 };
 
-export const tableHeaderStyle: React.CSSProperties = {
-    padding: '0.75rem 1rem',
-    textAlign: 'left',
-    opacity: 0.65,
-    fontWeight: 600,
-    fontSize: '0.8rem',
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em',
-};
-
-export const tableCellStyle: React.CSSProperties = {
-    padding: '0.75rem 1rem',
-    verticalAlign: 'middle',
-};
-
 export function difficultyBadgeStyle(difficulty?: string | null): React.CSSProperties {
     const base: React.CSSProperties = {
         display: 'inline-block',

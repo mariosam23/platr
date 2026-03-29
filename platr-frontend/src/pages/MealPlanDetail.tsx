@@ -9,10 +9,11 @@ import {
     type MealType,
 } from '../application/models/mealPlan';
 import { PlatrRoutes } from '../application/routes';
+import { ConfirmModal } from '../components/ConfirmModal';
+import { Table, tableCellStyle, tableHeaderStyle } from '../components/Table';
 import { useAppSelector } from '../hooks/useAppStore';
 import { MealPlanFormModal } from '../presentation/mealplans/MealPlanFormModal';
-import { ConfirmModal } from '../presentation/recipes/ConfirmModal';
-import { modalBaseStyle, overlayStyle, tableCellStyle, tableHeaderStyle } from '../presentation/recipes/recipeStyles';
+import { modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
 import {
     deleteMealPlan,
     fetchMealPlanDetail,
@@ -184,21 +185,14 @@ export const MealPlanDetail: React.FC = () => {
 
             <section>
                 <h2 style={{ marginBottom: '1rem' }}>Weekly Schedule</h2>
-                <div
-                    style={{
-                        overflowX: 'auto',
+                <Table
+                    containerStyle={{
                         border: '1px solid #2a2a2a',
                         borderRadius: 12,
                         background: '#121212',
                     }}
+                    tableStyle={{ minWidth: 760 }}
                 >
-                    <table
-                        style={{
-                            width: '100%',
-                            borderCollapse: 'collapse',
-                            minWidth: 760,
-                        }}
-                    >
                         <thead>
                             <tr style={{ borderBottom: '1px solid #2a2a2a' }}>
                                 <th style={tableHeaderStyle}>Meal Type</th>
@@ -238,8 +232,7 @@ export const MealPlanDetail: React.FC = () => {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
-                </div>
+                </Table>
             </section>
 
             {isEditing ? (
@@ -258,6 +251,7 @@ export const MealPlanDetail: React.FC = () => {
                     onConfirm={() => deleteMut.mutate()}
                     onCancel={() => setIsDeleteConfirmOpen(false)}
                     isLoading={deleteMut.isPending}
+                    ariaLabel="Delete meal plan confirmation"
                 />
             ) : null}
 

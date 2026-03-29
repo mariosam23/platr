@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { canManageRecipe } from '../application/models/recipe';
 import { PlatrRoutes } from '../application/routes';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { useAppSelector } from '../hooks/useAppStore';
-import { ConfirmModal } from '../presentation/recipes/ConfirmModal';
 import { RecipeFormModal } from '../presentation/recipes/RecipeFormModal';
 import { difficultyBadgeStyle, modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
 import {
@@ -315,6 +315,7 @@ export const RecipeDetail: React.FC = () => {
                     onConfirm={() => deleteMut.mutate()}
                     onCancel={() => setIsDeleteConfirmOpen(false)}
                     isLoading={deleteMut.isPending}
+                    ariaLabel="Delete recipe confirmation"
                 />
             ) : null}
 

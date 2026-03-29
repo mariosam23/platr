@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { MealPlanItem, MealPlanRequest } from '../application/models/mealPlan';
-import { ConfirmModal } from '../presentation/recipes/ConfirmModal';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { MealPlanFormModal } from '../presentation/mealplans/MealPlanFormModal';
 import { modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
 import { MealPlansTable } from '../presentation/mealplans/MealPlansTable';
@@ -93,7 +93,6 @@ export const MealPlans: React.FC = () => {
 	});
 
 	const mealPlans = data?.content ?? [];
-	const totalPages = data?.totalPages ?? 0;
 
 	return (
 		<div className="page">
@@ -137,8 +136,7 @@ export const MealPlans: React.FC = () => {
 			) : (
 				<MealPlansTable
 					mealPlans={mealPlans}
-					page={page}
-					totalPages={totalPages}
+					page={data}
 					isFetching={isFetching}
 					onEdit={(mealPlanId) => {
 						setPageError(null);
@@ -194,6 +192,7 @@ export const MealPlans: React.FC = () => {
 					onConfirm={() => deleteMut.mutate(deleteTarget.mealPlanId)}
 					onCancel={() => setDeleteTarget(null)}
 					isLoading={deleteMut.isPending}
+					ariaLabel="Delete meal plan confirmation"
 				/>
 			) : null}
 		</div>

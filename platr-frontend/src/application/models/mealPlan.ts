@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import type { SpringPage } from './page';
 import type { components } from '../../types/api';
 
 export type DayOfWeek = components['schemas']['MealPlanRecipeAssignmentRequest']['dayOfWeek'];
@@ -24,16 +25,7 @@ export interface MealPlanItem {
     updatedAt: string | null;
 }
 
-export interface MealPlanPage {
-    content: MealPlanItem[];
-    totalPages: number;
-    totalElements: number;
-    size: number;
-    number: number;
-    first: boolean;
-    last: boolean;
-    empty: boolean;
-}
+export interface MealPlanPage extends SpringPage<MealPlanItem> {}
 
 export interface MealPlanFormAssignment {
     recipeId: string;
