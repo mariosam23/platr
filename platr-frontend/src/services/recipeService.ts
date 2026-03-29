@@ -4,9 +4,11 @@ import type {
     RecipeDetailItem,
     RecipeListFilters,
     RecipeListPage,
+    ReviewResponse,
     RecipeRequest,
     RecipeSummaryItem,
 } from '../application/models/recipe';
+import type { ReviewRequest } from '../application/models/review';
 import { APIEndpoint } from '../utils/constants';
 import type { components } from '../types/api';
 import { RECIPE_PAGE_SIZE } from '../application/models/recipe';
@@ -193,4 +195,9 @@ export async function updateRecipe(id: string, body: RecipeRequest): Promise<Rec
 
 export async function deleteRecipe(id: string): Promise<void> {
     await axiosInstance.delete(`${APIEndpoint.RECIPES}/${id}`);
+}
+
+export async function addRecipeReview(id: string, body: ReviewRequest): Promise<ReviewResponse> {
+    const { data } = await axiosInstance.post<components['schemas']['ReviewResponse']>(`${APIEndpoint.RECIPES}/${id}/reviews`, body);
+    return data;
 }

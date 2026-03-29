@@ -24,7 +24,6 @@ const NavBar = () => {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/recipes">Recipes</Link></li>
                 <li><Link to="/mealplans">Meal Plans</Link></li>
-                <li><Link to="/feedback">Feedback</Link></li>
                 
                 {!isAuthenticated ? (
                     <>

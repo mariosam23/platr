@@ -86,6 +86,7 @@ export const RecipeDetail: React.FC = () => {
     }
 
     const canManage = canManageRecipe(recipe, user);
+    const hasReviewedRecipe = Boolean(user?.userId && recipe.reviews.some((review) => review.ownerId === user.userId));
 
     return (
         <div className="page">
@@ -238,7 +239,29 @@ export const RecipeDetail: React.FC = () => {
                 </div>
 
                 <div>
-                    <h2 style={{ marginBottom: '1rem' }}>Reviews</h2>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            gap: '1rem',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            marginBottom: '1rem',
+                        }}
+                    >
+                        <h2 style={{ margin: 0 }}>Reviews</h2>
+                        {user ? (
+                            canManage ? (
+                                <span style={{ opacity: 0.65 }}>You cannot review your own recipe.</span>
+                            ) : hasReviewedRecipe ? (
+                                <span style={{ opacity: 0.65 }}>You already reviewed this recipe.</span>
+                            ) : (
+                                <Link to={`${PlatrRoutes.Feedback}?recipeId=${recipe.recipeId}`}>Write a review</Link>
+                            )
+                        ) : (
+                            <Link to={PlatrRoutes.Login}>Log in to review</Link>
+                        )}
+                    </div>
                     {recipe.reviews.length > 0 ? (
                         <div style={{ display: 'grid', gap: '1rem' }}>
                             {recipe.reviews.map((review) => (
