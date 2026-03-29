@@ -3,7 +3,6 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import type { MealPlanItem, MealPlanRequest } from '../application/models/mealPlan';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { MealPlanFormModal } from '../presentation/mealplans/MealPlanFormModal';
-import { modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
 import { MealPlansTable } from '../presentation/mealplans/MealPlansTable';
 import {
 	createMealPlan,
@@ -20,6 +19,7 @@ export const MealPlans: React.FC = () => {
 
 	const [page, setPage] = useState(0);
 	const [pageError, setPageError] = useState<string | null>(null);
+	const [pageNotice, setPageNotice] = useState<string | null>(null);
 	const [isAddOpen, setIsAddOpen] = useState(false);
 	const [editTargetId, setEditTargetId] = useState<string | null>(null);
 	const [deleteTarget, setDeleteTarget] = useState<MealPlanItem | null>(null);
@@ -54,10 +54,12 @@ export const MealPlans: React.FC = () => {
 		mutationFn: createMealPlan,
 		onSuccess: async () => {
 			setPageError(null);
+			setPageNotice('Meal plan added successfully.');
 			await invalidateMealPlans();
 			setIsAddOpen(false);
 		},
 		onError: (error) => {
+			setPageNotice(null);
 			setPageError(getApiErrorMessage(error, 'Failed to save meal plan.'));
 		},
 	});
@@ -66,6 +68,7 @@ export const MealPlans: React.FC = () => {
 		mutationFn: ({ id, body }: { id: string; body: MealPlanRequest }) => updateMealPlan(id, body),
 		onSuccess: async (_, variables) => {
 			setPageError(null);
+			setPageNotice('Meal plan updated successfully.');
 			await Promise.all([
 				invalidateMealPlans(),
 				qc.invalidateQueries({ queryKey: ['mealPlanDetail', variables.id] }),
@@ -73,6 +76,7 @@ export const MealPlans: React.FC = () => {
 			setEditTargetId(null);
 		},
 		onError: (error) => {
+			setPageNotice(null);
 			setPageError(getApiErrorMessage(error, 'Failed to update meal plan.'));
 		},
 	});
@@ -81,6 +85,7 @@ export const MealPlans: React.FC = () => {
 		mutationFn: deleteMealPlan,
 		onSuccess: async () => {
 			setPageError(null);
+			setPageNotice('Meal plan deleted successfully.');
 			if ((data?.content.length ?? 0) === 1 && page > 0) {
 				setPage((currentPage) => currentPage - 1);
 			}
@@ -88,6 +93,7 @@ export const MealPlans: React.FC = () => {
 			setDeleteTarget(null);
 		},
 		onError: (error) => {
+			setPageNotice(null);
 			setPageError(getApiErrorMessage(error, 'Failed to delete meal plan.'));
 		},
 	});
@@ -96,27 +102,18 @@ export const MealPlans: React.FC = () => {
 
 	return (
 		<div className="page">
-			<div
-				style={{
-					display: 'flex',
-					justifyContent: 'space-between',
-					alignItems: 'center',
-					marginBottom: '1.5rem',
-					flexWrap: 'wrap',
-					gap: '0.75rem',
-				}}
-			>
-				<h1 style={{ margin: 0 }}>Meal Plans</h1>
+			<div className="page-header">
+				<div className="page-heading">
+					<h1>Meal Plans</h1>
+					<p className="page-subtitle">Shape weekly schedules in a layout that is easier to scan and update.</p>
+				</div>
 				<button
 					type="button"
+					className="app-button app-button-primary"
 					onClick={() => {
 						setPageError(null);
+						setPageNotice(null);
 						setIsAddOpen(true);
-					}}
-					style={{
-						background: '#4f46e5',
-						color: '#fff',
-						borderColor: '#6366f1',
 					}}
 				>
 					+ Add Meal Plan
@@ -124,15 +121,21 @@ export const MealPlans: React.FC = () => {
 			</div>
 
 			{pageError ? (
-				<p role="alert" style={{ color: '#ff6b6b', marginBottom: '1rem' }}>
+				<p role="alert" className="app-message app-message-error app-toast">
 					{pageError}
 				</p>
 			) : null}
 
+			{pageNotice ? (
+				<p role="status" className="app-message app-message-success app-toast">
+					{pageNotice}
+				</p>
+			) : null}
+
 			{isLoading ? (
-				<p>Loading...</p>
+				<p className="app-message app-toast">Loading meal plans...</p>
 			) : isError ? (
-				<p style={{ color: '#ff6b6b' }}>Failed to load meal plans.</p>
+				<p className="app-message app-message-error app-toast">Failed to load meal plans.</p>
 			) : (
 				<MealPlansTable
 					mealPlans={mealPlans}
@@ -140,10 +143,12 @@ export const MealPlans: React.FC = () => {
 					isFetching={isFetching}
 					onEdit={(mealPlanId) => {
 						setPageError(null);
+						setPageNotice(null);
 						setEditTargetId(mealPlanId);
 					}}
 					onDelete={(mealPlan) => {
 						setPageError(null);
+						setPageNotice(null);
 						setDeleteTarget(mealPlan);
 					}}
 					onPageChange={setPage}
@@ -161,9 +166,9 @@ export const MealPlans: React.FC = () => {
 
 			{editTargetId ? (
 				isFetchingEdit ? (
-					<div style={overlayStyle}>
-						<div style={modalBaseStyle}>
-							<p>Loading meal plan details...</p>
+					<div className="modal-overlay">
+						<div className="modal-dialog modal-dialog--compact">
+							<p className="modal-copy">Loading meal plan details...</p>
 						</div>
 					</div>
 				) : editTargetDetail ? (
@@ -175,10 +180,10 @@ export const MealPlans: React.FC = () => {
 						isLoading={updateMut.isPending}
 					/>
 				) : (
-					<div style={overlayStyle}>
-						<div style={modalBaseStyle}>
-							<p>Error loading meal plan details.</p>
-							<button type="button" onClick={() => setEditTargetId(null)}>
+						<div className="modal-overlay">
+							<div className="modal-dialog modal-dialog--compact">
+								<p className="modal-copy">Error loading meal plan details.</p>
+								<button type="button" className="app-button app-button-subtle" onClick={() => setEditTargetId(null)}>
 								Close
 							</button>
 						</div>

@@ -103,7 +103,7 @@ export const Feedback: React.FC = () => {
 				<section className="feedback-card">
 					<form className="feedback-form" onSubmit={handleSubmit(onSubmit)} noValidate>
 						{serverError ? (
-							<p role="alert" className="feedback-error">
+							<p role="alert" className="app-message app-message-error feedback-error">
 								{serverError}
 							</p>
 						) : null}
@@ -190,12 +190,12 @@ export const Feedback: React.FC = () => {
 						<div className="feedback-actions">
 							<button
 								type="submit"
-								className="nav-btn nav-btn-primary"
+								className="app-button app-button-primary"
 								disabled={isSubmitting || addReviewMutation.isPending || !canSubmit}
 							>
 								{isSubmitting || addReviewMutation.isPending ? 'Submitting…' : 'Submit review'}
 							</button>
-							<Link className="feedback-secondary-link" to={selectedRecipeId ? PlatrRoutes.RecipeDetail.replace(':id', selectedRecipeId) : PlatrRoutes.Recipes}>
+							<Link className="app-button app-button-subtle feedback-secondary-link" to={selectedRecipeId ? PlatrRoutes.RecipeDetail.replace(':id', selectedRecipeId) : PlatrRoutes.Recipes}>
 								Cancel
 							</Link>
 						</div>

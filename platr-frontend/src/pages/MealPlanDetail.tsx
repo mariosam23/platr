@@ -13,7 +13,6 @@ import { ConfirmModal } from '../components/ConfirmModal';
 import { Table, tableCellStyle, tableHeaderStyle } from '../components/Table';
 import { useAppSelector } from '../hooks/useAppStore';
 import { MealPlanFormModal } from '../presentation/mealplans/MealPlanFormModal';
-import { modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
 import {
     deleteMealPlan,
     fetchMealPlanDetail,
@@ -48,6 +47,7 @@ export const MealPlanDetail: React.FC = () => {
     const user = useAppSelector((state) => state.auth.user);
 
     const [pageError, setPageError] = useState<string | null>(null);
+    const [pageNotice, setPageNotice] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
@@ -68,6 +68,7 @@ export const MealPlanDetail: React.FC = () => {
         mutationFn: (body: NonNullable<Parameters<typeof updateMealPlan>[1]>) => updateMealPlan(mealPlanId, body),
         onSuccess: async () => {
             setPageError(null);
+            setPageNotice('Meal plan updated successfully.');
             await Promise.all([
                 qc.invalidateQueries({ queryKey: ['mealPlans'] }),
                 qc.invalidateQueries({ queryKey: ['mealPlanDetail', mealPlanId] }),
@@ -75,6 +76,7 @@ export const MealPlanDetail: React.FC = () => {
             setIsEditing(false);
         },
         onError: (error) => {
+            setPageNotice(null);
             setPageError(getApiErrorMessage(error, 'Failed to update meal plan.'));
         },
     });
@@ -83,10 +85,12 @@ export const MealPlanDetail: React.FC = () => {
         mutationFn: () => deleteMealPlan(mealPlanId),
         onSuccess: async () => {
             setPageError(null);
+            setPageNotice(null);
             await qc.invalidateQueries({ queryKey: ['mealPlans'] });
             navigate(PlatrRoutes.MealPlans);
         },
         onError: (error) => {
+            setPageNotice(null);
             setPageError(getApiErrorMessage(error, 'Failed to delete meal plan.'));
         },
     });
@@ -96,13 +100,13 @@ export const MealPlanDetail: React.FC = () => {
     }
 
     if (isLoading) {
-        return <div className="page"><p>Loading meal plan...</p></div>;
+        return <div className="page"><p className="app-message app-toast">Loading meal plan...</p></div>;
     }
 
     if (isError || !mealPlan) {
         return (
             <div className="page">
-                <p style={{ color: '#ff6b6b' }}>Failed to load meal plan details.</p>
+                <p className="app-message app-message-error app-toast">Failed to load meal plan details.</p>
                 <Link to={PlatrRoutes.MealPlans}>Back to meal plans</Link>
             </div>
         );
@@ -112,89 +116,73 @@ export const MealPlanDetail: React.FC = () => {
 
     return (
         <div className="page">
-            <div style={{ marginBottom: '1.5rem' }}>
-                <Link to={PlatrRoutes.MealPlans}>Back to meal plans</Link>
+            <div>
+                <Link className="page-back-link" to={PlatrRoutes.MealPlans}>Back to meal plans</Link>
             </div>
 
             {pageError ? (
-                <p role="alert" style={{ color: '#ff6b6b', marginBottom: '1rem' }}>
+                <p role="alert" className="app-message app-message-error app-toast">
                     {pageError}
                 </p>
             ) : null}
 
-            <section
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: '1rem',
-                    alignItems: 'flex-start',
-                    flexWrap: 'wrap',
-                    marginBottom: '1.5rem',
-                }}
-            >
+            {pageNotice ? (
+                <p role="status" className="app-message app-message-success app-toast">
+                    {pageNotice}
+                </p>
+            ) : null}
+
+            <section className="detail-panel" style={{ marginBottom: '1.5rem' }}>
+                <div className="detail-topline">
                 <div>
                     <h1 style={{ margin: '0 0 0.75rem' }}>Meal Plan for {formatDate(mealPlan.weekStart)}</h1>
-                    <p style={{ margin: 0, opacity: 0.8, lineHeight: 1.7, maxWidth: 720 }}>{mealPlan.notes}</p>
+                    <p className="detail-copy" style={{ maxWidth: 720 }}>{mealPlan.notes}</p>
                 </div>
 
                 {canManage ? (
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                        <button type="button" onClick={() => setIsEditing(true)}>
+                    <div className="detail-actions">
+                        <button type="button" className="app-button" onClick={() => {
+                            setPageNotice(null);
+                            setIsEditing(true);
+                        }}>
                             Edit
                         </button>
                         <button
                             type="button"
+                            className="app-button app-button-danger"
                             onClick={() => setIsDeleteConfirmOpen(true)}
-                            style={{
-                                background: '#3a1515',
-                                borderColor: '#ef4444',
-                                color: '#fca5a5',
-                            }}
                         >
                             Delete
                         </button>
                     </div>
                 ) : null}
+                </div>
             </section>
 
-            <section
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                    gap: '1rem',
-                    marginBottom: '2rem',
-                }}
-            >
+            <section className="detail-meta-grid">
                 <div>
-                    <div style={{ opacity: 0.65, fontSize: '0.82rem', marginBottom: '0.35rem' }}>Owner</div>
+                    <span className="detail-meta-label">Owner</span>
                     <div>{mealPlan.ownerUsername}</div>
                 </div>
                 <div>
-                    <div style={{ opacity: 0.65, fontSize: '0.82rem', marginBottom: '0.35rem' }}>Assignments</div>
+                    <span className="detail-meta-label">Assignments</span>
                     <div>{mealPlan.recipes.length}</div>
                 </div>
                 <div>
-                    <div style={{ opacity: 0.65, fontSize: '0.82rem', marginBottom: '0.35rem' }}>Created</div>
+                    <span className="detail-meta-label">Created</span>
                     <div>{mealPlan.createdAt ? formatDate(mealPlan.createdAt) : '-'}</div>
                 </div>
                 <div>
-                    <div style={{ opacity: 0.65, fontSize: '0.82rem', marginBottom: '0.35rem' }}>Updated</div>
+                    <span className="detail-meta-label">Updated</span>
                     <div>{mealPlan.updatedAt ? formatDate(mealPlan.updatedAt) : '-'}</div>
                 </div>
             </section>
 
-            <section>
+            <section className="detail-panel">
                 <h2 style={{ marginBottom: '1rem' }}>Weekly Schedule</h2>
-                <Table
-                    containerStyle={{
-                        border: '1px solid #2a2a2a',
-                        borderRadius: 12,
-                        background: '#121212',
-                    }}
-                    tableStyle={{ minWidth: 760 }}
-                >
+                <Table tableStyle={{ minWidth: 760 }}>
                         <thead>
-                            <tr style={{ borderBottom: '1px solid #2a2a2a' }}>
+                            <tr>
                                 <th style={tableHeaderStyle}>Meal Type</th>
                                 {DAY_OF_WEEK_OPTIONS.map((day) => (
                                     <th key={day} style={tableHeaderStyle}>{dayLabels[day]}</th>
@@ -203,7 +191,7 @@ export const MealPlanDetail: React.FC = () => {
                         </thead>
                         <tbody>
                             {MEAL_TYPE_OPTIONS.map((mealType) => (
-                                <tr key={mealType} style={{ borderBottom: '1px solid #2a2a2a' }}>
+                                <tr key={mealType}>
                                     <th style={{ ...tableHeaderStyle, whiteSpace: 'nowrap', verticalAlign: 'top' }}>
                                         {mealTypeLabels[mealType]}
                                     </th>
@@ -215,7 +203,7 @@ export const MealPlanDetail: React.FC = () => {
                                         return (
                                             <td key={day} style={{ ...tableCellStyle, minWidth: 130 }}>
                                                 {assignment ? (
-                                                    <div>
+                                                    <div className="app-form-stack">
                                                         <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>
                                                             {assignment.recipeTitle}
                                                         </div>
@@ -224,7 +212,7 @@ export const MealPlanDetail: React.FC = () => {
                                                         </Link>
                                                     </div>
                                                 ) : (
-                                                    <span style={{ opacity: 0.45 }}>Unassigned</span>
+                                                    <span className="table-placeholder">Unassigned</span>
                                                 )}
                                             </td>
                                         );
@@ -256,9 +244,9 @@ export const MealPlanDetail: React.FC = () => {
             ) : null}
 
             {updateMut.isPending ? (
-                <div style={overlayStyle}>
-                    <div style={modalBaseStyle}>
-                        <p>Saving meal plan changes...</p>
+                <div className="modal-overlay">
+                    <div className="modal-dialog modal-dialog--compact">
+                        <p className="modal-copy">Saving meal plan changes...</p>
                     </div>
                 </div>
             ) : null}

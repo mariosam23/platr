@@ -1,6 +1,5 @@
 import React from 'react';
 import type { CategoryOption } from '../../application/models/recipe';
-import { inputStyle } from './recipeStyles';
 
 interface RecipeFiltersProps {
     searchInput: string;
@@ -27,17 +26,9 @@ export const RecipeFilters: React.FC<RecipeFiltersProps> = ({
     onCategoryChange,
     onClear,
 }) => (
-    <div
-        style={{
-            display: 'flex',
-            gap: '0.75rem',
-            marginBottom: '1.5rem',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-        }}
-    >
+    <div className="filter-bar">
         <input
-            style={{ ...inputStyle, width: 240, marginBottom: 0 }}
+            className="filter-bar__control"
             placeholder="Search recipes..."
             value={searchInput}
             onChange={(event) => onSearchInputChange(event.target.value)}
@@ -47,11 +38,11 @@ export const RecipeFilters: React.FC<RecipeFiltersProps> = ({
                 }
             }}
         />
-        <button type="button" onClick={onCommitSearch}>
+        <button type="button" className="app-button" onClick={onCommitSearch}>
             Search
         </button>
         <select
-            style={{ ...inputStyle, width: 220, marginBottom: 0 }}
+            className="filter-bar__control filter-bar__control--compact"
             value={selectedCategoryId}
             onChange={(event) => onCategoryChange(event.target.value)}
         >
@@ -63,12 +54,12 @@ export const RecipeFilters: React.FC<RecipeFiltersProps> = ({
             ))}
         </select>
         {hasActiveFilters ? (
-            <button type="button" onClick={onClear}>
+            <button type="button" className="app-button app-button-subtle" onClick={onClear}>
                 Clear
             </button>
         ) : null}
         {isFetching && !isLoading ? (
-            <span style={{ opacity: 0.5, fontSize: '0.85rem' }}>Updating...</span>
+            <span className="filter-bar__status">Updating...</span>
         ) : null}
     </div>
 );

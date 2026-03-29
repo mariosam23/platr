@@ -28,35 +28,35 @@ export const Pagination: React.FC<PaginationProps> = ({
     const visiblePages = getVisiblePages(currentPage, page.totalPages, maxVisiblePages);
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                gap: '0.4rem',
-                alignItems: 'center',
-                marginTop: '1.5rem',
-                flexWrap: 'wrap',
-            }}
-        >
-            <button type="button" disabled={page.first} onClick={() => onPageChange(currentPage - 1)}>
+        <div className="pagination">
+            <span className="pagination__summary">
+                Page {currentPage + 1} of {page.totalPages}
+            </span>
+            <button
+                type="button"
+                className="app-button pagination__button"
+                disabled={page.first}
+                onClick={() => onPageChange(currentPage - 1)}
+            >
                 Previous
             </button>
             {visiblePages.map((pageIndex) => (
                 <button
                     key={pageIndex}
                     type="button"
+                    className={`app-button pagination__button${pageIndex === currentPage ? ' pagination__button--current' : ''}`}
                     onClick={() => onPageChange(pageIndex)}
                     aria-current={pageIndex === currentPage ? 'page' : undefined}
-                    style={{
-                        minWidth: '2.25rem',
-                        fontWeight: pageIndex === currentPage ? 700 : undefined,
-                        borderColor: pageIndex === currentPage ? '#6366f1' : undefined,
-                        background: pageIndex === currentPage ? '#312e81' : undefined,
-                    }}
                 >
                     {pageIndex + 1}
                 </button>
             ))}
-            <button type="button" disabled={page.last} onClick={() => onPageChange(currentPage + 1)}>
+            <button
+                type="button"
+                className="app-button pagination__button"
+                disabled={page.last}
+                onClick={() => onPageChange(currentPage + 1)}
+            >
                 Next
             </button>
         </div>

@@ -66,59 +66,67 @@ export const Register: React.FC = () => {
     };
 
     return (
-        <div className="page">
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate className="auth-form">
-                {serverError && (
-                    <p role="alert" className="auth-server-error">
-                        {serverError}
-                    </p>
-                )}
+        <div className="page auth-page">
+            <div className="auth-shell">
+                <section className="auth-card">
+                    <div className="auth-heading">
+                        <h1>Register</h1>
+                        <p className="auth-subtitle">Create an account to build meal plans and keep your recipes organized.</p>
+                    </div>
 
-                <AuthField
-                    id="username"
-                    type="text"
-                    autoComplete="username"
-                    label="Username"
-                    error={errors.username?.message}
-                    {...register('username')}
-                />
+                    <form onSubmit={handleSubmit(onSubmit)} noValidate className="auth-form">
+                        {serverError && (
+                            <p role="alert" className="app-message app-message-error auth-server-error">
+                                {serverError}
+                            </p>
+                        )}
 
-                <AuthField
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    label="Email"
-                    error={errors.email?.message}
-                    {...register('email')}
-                />
+                        <AuthField
+                            id="username"
+                            type="text"
+                            autoComplete="username"
+                            label="Username"
+                            error={errors.username?.message}
+                            {...register('username')}
+                        />
 
-                <AuthField
-                    id="password"
-                    type="password"
-                    autoComplete="new-password"
-                    label="Password"
-                    error={errors.password?.message}
-                    {...register('password')}
-                />
+                        <AuthField
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            label="Email"
+                            error={errors.email?.message}
+                            {...register('email')}
+                        />
 
-                <AuthField
-                    id="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    label="Confirm Password"
-                    error={errors.confirmPassword?.message}
-                    {...register('confirmPassword')}
-                />
+                        <AuthField
+                            id="password"
+                            type="password"
+                            autoComplete="new-password"
+                            label="Password"
+                            error={errors.password?.message}
+                            {...register('password')}
+                        />
 
-                <button type="submit" disabled={isSubmitting} className="nav-btn nav-btn-primary">
-                    {isSubmitting ? 'Registering…' : 'Register'}
-                </button>
+                        <AuthField
+                            id="confirmPassword"
+                            type="password"
+                            autoComplete="new-password"
+                            label="Confirm Password"
+                            error={errors.confirmPassword?.message}
+                            {...register('confirmPassword')}
+                        />
 
-                <p className="auth-hint">
-                    Already have an account? <Link to={PlatrRoutes.Login}>Log in</Link>
-                </p>
-            </form>
+                        <button type="submit" disabled={isSubmitting} className="app-button app-button-primary auth-submit">
+                            {isSubmitting ? 'Registering…' : 'Register'}
+                        </button>
+
+                        <p className="auth-hint">
+                            Already have an account? <Link to={PlatrRoutes.Login}>Log in</Link>
+                        </p>
+                    </form>
+                </section>
+            </div>
         </div>
     );
 };

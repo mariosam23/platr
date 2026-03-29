@@ -8,18 +8,9 @@ interface TableProps {
 }
 
 export const tableHeaderStyle: React.CSSProperties = {
-    padding: '0.75rem 1rem',
-    textAlign: 'left',
-    opacity: 0.65,
-    fontWeight: 600,
-    fontSize: '0.8rem',
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em',
 };
 
 export const tableCellStyle: React.CSSProperties = {
-    padding: '0.75rem 1rem',
-    verticalAlign: 'middle',
 };
 
 export const Table: React.FC<TableProps> = ({
@@ -29,18 +20,14 @@ export const Table: React.FC<TableProps> = ({
     tableStyle,
 }) => (
     <div
+        className={`data-table-shell${isDimmed ? ' is-dimmed' : ''}`}
         style={{
-            overflowX: 'auto',
-            opacity: isDimmed ? 0.6 : 1,
-            transition: 'opacity 0.15s',
             ...containerStyle,
         }}
     >
         <table
+            className="data-table"
             style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                fontSize: '0.95rem',
                 ...tableStyle,
             }}
         >

@@ -10,7 +10,6 @@ import {
     mealPlanFormSchema,
     toMealPlanRequest,
 } from '../../application/models/mealPlan';
-import { errorTextStyle, inputStyle, labelStyle, modalBaseStyle, overlayStyle } from '../recipes/recipeStyles';
 
 interface MealPlanFormModalProps {
     recipes: RecipeSummaryItem[];
@@ -52,31 +51,28 @@ export const MealPlanFormModal: React.FC<MealPlanFormModalProps> = ({
     };
 
     return (
-        <div style={overlayStyle} role="dialog" aria-modal="true" aria-label={initial ? 'Edit meal plan' : 'Add meal plan'}>
-            <div style={{ ...modalBaseStyle, maxWidth: 760, maxHeight: '90vh', overflowY: 'auto' }}>
-                <h2 style={{ margin: '0 0 1.5rem' }}>{initial ? 'Edit Meal Plan' : 'Add Meal Plan'}</h2>
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-label={initial ? 'Edit meal plan' : 'Add meal plan'}>
+            <div className="modal-dialog modal-dialog--large">
+                <h2 className="modal-title">{initial ? 'Edit Meal Plan' : 'Add Meal Plan'}</h2>
 
-                <form onSubmit={handleSubmit(submit)}>
-                    <label style={labelStyle} htmlFor="mealplan-weekstart">
+                <form className="app-form" onSubmit={handleSubmit(submit)}>
+                    <label className="app-field-label" htmlFor="mealplan-weekstart">
                         Week Start *
                     </label>
-                    <input id="mealplan-weekstart" type="date" style={inputStyle} {...register('weekStart')} />
-                    {errors.weekStart ? <span style={errorTextStyle}>{errors.weekStart.message}</span> : null}
+                    <input id="mealplan-weekstart" type="date" {...register('weekStart')} />
+                    {errors.weekStart ? <span className="app-field-error">{errors.weekStart.message}</span> : null}
 
-                    <label style={labelStyle} htmlFor="mealplan-notes">
+                    <label className="app-field-label" htmlFor="mealplan-notes">
                         Notes *
                     </label>
-                    <textarea
-                        id="mealplan-notes"
-                        style={{ ...inputStyle, minHeight: 96, resize: 'vertical' }}
-                        {...register('notes')}
-                    />
-                    {errors.notes ? <span style={errorTextStyle}>{errors.notes.message}</span> : null}
+                    <textarea id="mealplan-notes" style={{ minHeight: 120 }} {...register('notes')} />
+                    {errors.notes ? <span className="app-field-error">{errors.notes.message}</span> : null}
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <label style={{ ...labelStyle, marginBottom: 0 }}>Assignments</label>
+                    <div className="detail-actions">
+                        <label className="app-field-label">Assignments</label>
                         <button
                             type="button"
+                            className="app-button app-button-subtle"
                             onClick={() => append({ recipeId: '', mealType: 'BREAKFAST', dayOfWeek: 'MONDAY' })}
                         >
                             + Add Assignment
@@ -84,22 +80,17 @@ export const MealPlanFormModal: React.FC<MealPlanFormModalProps> = ({
                     </div>
 
                     {typeof errors.assignments?.message === 'string' ? (
-                        <span style={errorTextStyle}>{errors.assignments.message}</span>
+                        <span className="app-field-error">{errors.assignments.message}</span>
                     ) : null}
 
-                    <div style={{ display: 'grid', gap: '0.75rem' }}>
+                    <div className="app-form-stack">
                         {fields.map((field, index) => (
                             <div
                                 key={field.id}
-                                style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'minmax(0, 2fr) 1fr 1fr auto',
-                                    gap: '0.75rem',
-                                    alignItems: 'start',
-                                }}
+                                className="app-ingredient-row"
                             >
                                 <div>
-                                    <select style={inputStyle} {...register(`assignments.${index}.recipeId`)}>
+                                    <select {...register(`assignments.${index}.recipeId`)}>
                                         <option value="">Select recipe</option>
                                         {recipes.map((recipe) => (
                                             <option key={recipe.recipeId} value={recipe.recipeId}>
@@ -108,12 +99,12 @@ export const MealPlanFormModal: React.FC<MealPlanFormModalProps> = ({
                                         ))}
                                     </select>
                                     {errors.assignments?.[index]?.recipeId ? (
-                                        <span style={errorTextStyle}>{errors.assignments[index]?.recipeId?.message}</span>
+                                        <span className="app-field-error">{errors.assignments[index]?.recipeId?.message}</span>
                                     ) : null}
                                 </div>
 
                                 <div>
-                                    <select style={inputStyle} {...register(`assignments.${index}.mealType`)}>
+                                    <select {...register(`assignments.${index}.mealType`)}>
                                         {MEAL_TYPE_OPTIONS.map((mealType) => (
                                             <option key={mealType} value={mealType}>
                                                 {mealType}
@@ -121,12 +112,12 @@ export const MealPlanFormModal: React.FC<MealPlanFormModalProps> = ({
                                         ))}
                                     </select>
                                     {errors.assignments?.[index]?.mealType ? (
-                                        <span style={errorTextStyle}>{errors.assignments[index]?.mealType?.message}</span>
+                                        <span className="app-field-error">{errors.assignments[index]?.mealType?.message}</span>
                                     ) : null}
                                 </div>
 
                                 <div>
-                                    <select style={inputStyle} {...register(`assignments.${index}.dayOfWeek`)}>
+                                    <select {...register(`assignments.${index}.dayOfWeek`)}>
                                         {DAY_OF_WEEK_OPTIONS.map((dayOfWeek) => (
                                             <option key={dayOfWeek} value={dayOfWeek}>
                                                 {dayOfWeek}
@@ -134,19 +125,15 @@ export const MealPlanFormModal: React.FC<MealPlanFormModalProps> = ({
                                         ))}
                                     </select>
                                     {errors.assignments?.[index]?.dayOfWeek ? (
-                                        <span style={errorTextStyle}>{errors.assignments[index]?.dayOfWeek?.message}</span>
+                                        <span className="app-field-error">{errors.assignments[index]?.dayOfWeek?.message}</span>
                                     ) : null}
                                 </div>
 
                                 <button
                                     type="button"
+                                    className="app-button app-button-danger app-button-small"
                                     onClick={() => remove(index)}
                                     disabled={fields.length === 1}
-                                    style={{
-                                        padding: '0.6rem 0.75rem',
-                                        borderColor: '#ef4444',
-                                        color: '#fca5a5',
-                                    }}
                                 >
                                     Remove
                                 </button>
@@ -154,19 +141,11 @@ export const MealPlanFormModal: React.FC<MealPlanFormModalProps> = ({
                         ))}
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
-                        <button type="button" onClick={onClose} disabled={isLoading}>
+                    <div className="modal-actions">
+                        <button type="button" className="app-button app-button-subtle" onClick={onClose} disabled={isLoading}>
                             Cancel
                         </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            style={{
-                                background: '#4f46e5',
-                                color: '#fff',
-                                borderColor: '#6366f1',
-                            }}
-                        >
+                        <button type="submit" className="app-button app-button-primary" disabled={isLoading}>
                             {isLoading ? 'Saving...' : 'Save Meal Plan'}
                         </button>
                     </div>

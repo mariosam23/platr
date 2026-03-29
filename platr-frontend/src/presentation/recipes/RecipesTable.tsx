@@ -28,7 +28,7 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
     <>
         <Table isDimmed={isFetching}>
             <thead>
-                <tr style={{ borderBottom: '2px solid #333' }}>
+                <tr>
                     <th style={tableHeaderStyle}>Title</th>
                     <th style={tableHeaderStyle}>Difficulty</th>
                     <th style={tableHeaderStyle}>Prep Time</th>
@@ -41,24 +41,17 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
             <tbody>
                 {recipes.length === 0 ? (
                     <tr>
-                        <td
-                            colSpan={7}
-                            style={{
-                                textAlign: 'center',
-                                padding: '3rem',
-                                opacity: 0.45,
-                            }}
-                        >
+                        <td colSpan={7} className="data-table__empty">
                             No recipes found.
                         </td>
                     </tr>
                 ) : (
                     recipes.map((recipe) => (
-                        <tr key={recipe.recipeId} style={{ borderBottom: '1px solid #2a2a2a' }}>
+                        <tr key={recipe.recipeId}>
                             <td style={{ ...tableCellStyle, fontWeight: 500 }}>
                                 <Link
                                     to={PlatrRoutes.RecipeDetail.replace(':id', recipe.recipeId)}
-                                    style={{ color: 'inherit', textDecoration: 'none' }}
+                                    className="table-primary-link"
                                 >
                                     {recipe.title}
                                 </Link>
@@ -77,37 +70,27 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
                             <td style={tableCellStyle}>
                                 {recipe.avgRating != null ? `* ${recipe.avgRating.toFixed(1)}` : '-'}
                             </td>
-                            <td style={{ ...tableCellStyle, fontSize: '0.82rem' }}>
+                            <td style={tableCellStyle} className="table-cell-muted">
                                 {recipe.categoryTypes.length > 0 ? recipe.categoryTypes.join(', ') : '-'}
                             </td>
-                            <td style={{ ...tableCellStyle, whiteSpace: 'nowrap' }}>
+                            <td style={tableCellStyle} className="table-actions-cell">
                                 {canManage(recipe) ? (
-                                    <>
+                                    <div className="table-action-group">
                                         <button
                                             type="button"
+                                            className="app-button app-button-small"
                                             onClick={() => onEdit(recipe.recipeId)}
-                                            style={{
-                                                marginRight: '0.5rem',
-                                                padding: '0.3rem 0.7rem',
-                                                fontSize: '0.82rem',
-                                            }}
                                         >
                                             Edit
                                         </button>
                                         <button
                                             type="button"
+                                            className="app-button app-button-danger app-button-small"
                                             onClick={() => onDelete(recipe)}
-                                            style={{
-                                                padding: '0.3rem 0.7rem',
-                                                fontSize: '0.82rem',
-                                                background: '#3a1515',
-                                                borderColor: '#ef4444',
-                                                color: '#fca5a5',
-                                            }}
                                         >
                                             Delete
                                         </button>
-                                    </>
+                                    </div>
                                 ) : null}
                             </td>
                         </tr>

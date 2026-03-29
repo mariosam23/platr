@@ -11,10 +11,10 @@
 
 .feedback-hero {
     padding: 1.5rem 1.75rem;
-    border: 1px solid #2f3545;
+    border: 1px solid var(--color-border);
     border-radius: 24px;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(28, 25, 23, 0.9));
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    background: linear-gradient(135deg, rgba(79, 142, 247, 0.16), transparent 45%), var(--color-surface-strong);
+    box-shadow: var(--color-shadow);
 }
 
 .feedback-eyebrow {
@@ -22,7 +22,7 @@
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-size: 0.78rem;
-    color: #facc15;
+    color: var(--color-warning);
 }
 
 .feedback-hero h1 {
@@ -33,14 +33,15 @@
 .feedback-copy {
     max-width: 58ch;
     margin: 1rem 0 0;
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--color-text-muted);
 }
 
 .feedback-card {
     padding: 1.5rem 1.75rem;
     border-radius: 24px;
-    border: 1px solid #252b39;
-    background: rgba(14, 18, 28, 0.9);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: var(--color-shadow-soft);
 }
 
 .feedback-form {
@@ -61,12 +62,6 @@
 .feedback-field textarea {
     width: 100%;
     box-sizing: border-box;
-    border-radius: 14px;
-    border: 1px solid #394150;
-    padding: 0.85rem 1rem;
-    background: rgba(17, 24, 39, 0.82);
-    color: inherit;
-    font: inherit;
 }
 
 .feedback-field textarea {
@@ -74,29 +69,23 @@
     min-height: 150px;
 }
 
-.feedback-field select:focus,
-.feedback-field textarea:focus {
-    outline: 2px solid rgba(250, 204, 21, 0.45);
-    outline-offset: 2px;
-}
-
 .feedback-help,
 .feedback-status p,
 .feedback-secondary-link {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--color-text-muted);
 }
 
 .feedback-error,
 .feedback-field-error {
     margin: 0;
-    color: #fca5a5;
+    color: var(--color-danger);
 }
 
 .feedback-status {
     padding: 1rem 1.1rem;
     border-radius: 18px;
-    border: 1px solid #32394a;
-    background: rgba(17, 24, 39, 0.75);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-soft);
 }
 
 .feedback-status-header {
@@ -114,9 +103,15 @@
     flex-wrap: wrap;
 }
 
+.feedback-status [role='alert'] {
+    padding: 0.75rem 0.9rem;
+    border-radius: 14px;
+    border: 1px solid rgba(248, 113, 113, 0.28);
+    background: rgba(248, 113, 113, 0.08);
+}
+
 .feedback-secondary-link {
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
+    text-decoration: none;
 }
 
 @media (max-width: 640px) {

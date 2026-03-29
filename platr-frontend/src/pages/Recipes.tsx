@@ -5,7 +5,6 @@ import { ConfirmModal } from '../components/ConfirmModal';
 import { useAppSelector } from '../hooks/useAppStore';
 import { RecipeFilters } from '../presentation/recipes/RecipeFilters';
 import { RecipeFormModal } from '../presentation/recipes/RecipeFormModal';
-import { modalBaseStyle, overlayStyle } from '../presentation/recipes/recipeStyles';
 import { RecipesTable } from '../presentation/recipes/RecipesTable';
 import {
     createRecipe,
@@ -26,6 +25,7 @@ export const Recipes: React.FC = () => {
     const [searchInput, setSearchInput] = useState('');
     const [selectedCategoryId, setSelectedCategoryId] = useState('');
     const [pageError, setPageError] = useState<string | null>(null);
+    const [pageNotice, setPageNotice] = useState<string | null>(null);
     const [addOpen, setAddOpen] = useState(false);
     const [editTargetId, setEditTargetId] = useState<string | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<RecipeSummaryItem | null>(null);
@@ -65,10 +65,12 @@ export const Recipes: React.FC = () => {
         mutationFn: createRecipe,
         onSuccess: async () => {
             setPageError(null);
+            setPageNotice('Recipe added successfully.');
             await invalidateRecipes();
             setAddOpen(false);
         },
         onError: (error) => {
+            setPageNotice(null);
             setPageError(getApiErrorMessage(error, 'Failed to save recipe.'));
         },
     });
@@ -78,6 +80,7 @@ export const Recipes: React.FC = () => {
             updateRecipe(id, body),
         onSuccess: async (_, variables) => {
             setPageError(null);
+            setPageNotice('Recipe updated successfully.');
             await Promise.all([
                 invalidateRecipes(),
                 qc.invalidateQueries({ queryKey: ['recipeDetail', variables.id] }),
@@ -85,6 +88,7 @@ export const Recipes: React.FC = () => {
             setEditTargetId(null);
         },
         onError: (error) => {
+            setPageNotice(null);
             setPageError(getApiErrorMessage(error, 'Failed to update recipe.'));
         },
     });
@@ -93,6 +97,7 @@ export const Recipes: React.FC = () => {
         mutationFn: deleteRecipe,
         onSuccess: async () => {
             setPageError(null);
+            setPageNotice('Recipe deleted successfully.');
             if ((data?.content.length ?? 0) === 1 && page > 0) {
                 setPage((currentPage) => currentPage - 1);
             }
@@ -100,6 +105,7 @@ export const Recipes: React.FC = () => {
             setDeleteTarget(null);
         },
         onError: (error) => {
+            setPageNotice(null);
             setPageError(getApiErrorMessage(error, 'Failed to delete recipe.'));
         },
     });
@@ -108,16 +114,19 @@ export const Recipes: React.FC = () => {
 
     const openAddModal = () => {
         setPageError(null);
+        setPageNotice(null);
         setAddOpen(true);
     };
 
     const openEditModal = (recipeId: string) => {
         setPageError(null);
+        setPageNotice(null);
         setEditTargetId(recipeId);
     };
 
     const openDeleteModal = (recipe: RecipeSummaryItem) => {
         setPageError(null);
+        setPageNotice(null);
         setDeleteTarget(recipe);
     };
 
@@ -135,33 +144,25 @@ export const Recipes: React.FC = () => {
 
     return (
         <div className="page">
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '1.5rem',
-                    flexWrap: 'wrap',
-                    gap: '0.75rem',
-                }}
-            >
-                <h1 style={{ margin: 0 }}>Recipes</h1>
-                <button
-                    type="button"
-                    onClick={openAddModal}
-                    style={{
-                        background: '#4f46e5',
-                        color: '#fff',
-                        borderColor: '#6366f1',
-                    }}
-                >
+            <div className="page-header">
+                <div className="page-heading">
+                    <h1>Recipes</h1>
+                    <p className="page-subtitle">Browse, filter, and manage the recipe collection from a cleaner workspace.</p>
+                </div>
+                <button type="button" className="app-button app-button-primary" onClick={openAddModal}>
                     + Add Recipe
                 </button>
             </div>
 
             {pageError ? (
-                <p role="alert" style={{ color: '#ff6b6b', marginBottom: '1rem' }}>
+                <p role="alert" className="app-message app-message-error app-toast">
                     {pageError}
+                </p>
+            ) : null}
+
+            {pageNotice ? (
+                <p role="status" className="app-message app-message-success app-toast">
+                    {pageNotice}
                 </p>
             ) : null}
 
@@ -182,9 +183,9 @@ export const Recipes: React.FC = () => {
             />
 
             {isLoading ? (
-                <p>Loading...</p>
+                <p className="app-message app-toast">Loading recipes...</p>
             ) : isError ? (
-                <p style={{ color: '#ff6b6b' }}>Failed to load recipes.</p>
+                <p className="app-message app-message-error app-toast">Failed to load recipes.</p>
             ) : (
                 <RecipesTable
                     recipes={recipes}
@@ -208,9 +209,9 @@ export const Recipes: React.FC = () => {
 
             {editTargetId ? (
                 isFetchingEdit ? (
-                    <div style={overlayStyle}>
-                        <div style={modalBaseStyle}>
-                            <p>Loading recipe details...</p>
+                    <div className="modal-overlay">
+                        <div className="modal-dialog modal-dialog--compact">
+                            <p className="modal-copy">Loading recipe details...</p>
                         </div>
                     </div>
                 ) : editTargetDetail ? (
@@ -222,10 +223,10 @@ export const Recipes: React.FC = () => {
                         isLoading={updateMut.isPending}
                     />
                 ) : (
-                    <div style={overlayStyle}>
-                        <div style={modalBaseStyle}>
-                            <p>Error loading recipe details.</p>
-                            <button type="button" onClick={() => setEditTargetId(null)}>
+                    <div className="modal-overlay">
+                        <div className="modal-dialog modal-dialog--compact">
+                            <p className="modal-copy">Error loading recipe details.</p>
+                            <button type="button" className="app-button app-button-subtle" onClick={() => setEditTargetId(null)}>
                                 Close
                             </button>
                         </div>
