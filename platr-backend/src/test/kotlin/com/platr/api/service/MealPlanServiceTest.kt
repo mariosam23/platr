@@ -142,16 +142,18 @@ class MealPlanServiceTest {
             roles = setOf(Role.USER),
         )
 
-    private fun recipe(owner: User, title: String) =
-        Recipe(
-            recipeId = UUID.randomUUID(),
-            title = title,
-            description = "$title description",
-            prepTimeMinutes = 15,
-            difficulty = RecipeDifficulty.EASY,
-            avgRating = 0.0,
-            imageUrl = null,
-            calories = 250,
-            owner = owner,
-        )
+    private fun recipe(
+        owner: User,
+        title: String,
+    ) = Recipe(
+        recipeId = UUID.randomUUID(),
+        title = title,
+        description = "$title description",
+        prepTimeMinutes = 15,
+        difficulty = RecipeDifficulty.EASY,
+        avgRating = 0.0,
+        imageUrl = null,
+        calories = 250,
+        owner = owner,
+    )
 }

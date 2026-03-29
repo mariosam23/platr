@@ -7,15 +7,16 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class IngredientService(
-    private val ingredientRepository: IngredientRepository
+    private val ingredientRepository: IngredientRepository,
 ) {
     @Transactional(readOnly = true)
     fun searchIngredients(name: String?): List<IngredientDto> {
-        val ingredients = if (name == null) {
-            ingredientRepository.findAll()
-        } else {
-            ingredientRepository.findByNameContainingIgnoreCase(name.trim())
-        }
+        val ingredients =
+            if (name == null) {
+                ingredientRepository.findAll()
+            } else {
+                ingredientRepository.findByNameContainingIgnoreCase(name.trim())
+            }
 
         return ingredients.map {
             IngredientDto(

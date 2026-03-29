@@ -7,15 +7,14 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CategoryService(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
 ) {
     @Transactional(readOnly = true)
-    fun getAllCategories(): List<CategoryDto> {
-        return categoryRepository.findAll().map {
+    fun getAllCategories(): List<CategoryDto> =
+        categoryRepository.findAll().map {
             CategoryDto(
                 categoryId = it.categoryId!!,
-                categoryType = it.categoryType.name
+                categoryType = it.categoryType.name,
             )
         }
-    }
 }
