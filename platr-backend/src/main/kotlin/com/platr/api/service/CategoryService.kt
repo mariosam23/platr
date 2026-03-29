@@ -1,6 +1,6 @@
 package com.platr.api.service
 
-import com.platr.api.controller.CategoryDto
+import com.platr.api.dto.response.CategoryDto
 import com.platr.api.repository.CategoryRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

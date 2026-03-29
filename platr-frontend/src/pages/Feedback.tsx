@@ -80,12 +80,15 @@ export const Feedback: React.FC = () => {
 		currentUser?.userId && selectedRecipe?.reviews.some((review) => review.ownerId === currentUser.userId),
 	);
 	const isOwnRecipe = Boolean(currentUser?.userId && selectedRecipe?.ownerId === currentUser.userId);
-	const canSubmit = Boolean(selectedRecipe) && !isOwnRecipe && !hasReviewedRecipe;
+	const canSubmit = Boolean(currentUser) && Boolean(selectedRecipe) && !isOwnRecipe && !hasReviewedRecipe;
 	const recipeChoices = selectedRecipe && !recipeOptions.some((recipe) => recipe.recipeId === selectedRecipe.recipeId)
 		? [selectedRecipe, ...recipeOptions]
 		: recipeOptions;
 
 	const onSubmit = async (values: ReviewFormValues) => {
+		if (!currentUser) {
+			return;
+		}
 		setServerError(null);
 		await addReviewMutation.mutateAsync(values);
 	};

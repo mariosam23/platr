@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- Seed all category types
 INSERT INTO categories (category_id, created_at, updated_at, category_type)
 SELECT gen_random_uuid(), NOW(), NOW(), t.category_type

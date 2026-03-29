@@ -1,6 +1,6 @@
 package com.platr.api.service
 
-import com.platr.api.controller.IngredientDto
+import com.platr.api.dto.response.IngredientDto
 import com.platr.api.repository.IngredientRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

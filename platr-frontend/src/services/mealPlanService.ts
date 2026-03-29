@@ -6,7 +6,7 @@ import { APIEndpoint } from '../utils/constants';
 import axiosInstance from './axiosInstance';
 
 function normalizeMealPlan(mealPlan: components['schemas']['MealPlanDto']): MealPlanItem | null {
-    if (!mealPlan.mealPlanId || !mealPlan.weekStart || !mealPlan.notes || !mealPlan.ownerUsername) {
+    if (!mealPlan.mealPlanId || !mealPlan.weekStart || mealPlan.notes == null || mealPlan.ownerUsername == null) {
         return null;
     }
 
