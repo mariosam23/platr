@@ -75,6 +75,27 @@ export const mealPlanFormSchema = yup.object({
     assignments: yup
         .array(mealPlanAssignmentSchema)
         .min(1, 'At least one recipe assignment is required')
+        .test(
+            'unique-meal-slot',
+            'Each meal type can only be assigned once per day',
+            (assignments) => {
+                if (!assignments) {
+                    return true;
+                }
+
+                const seenSlots = new Set<string>();
+
+                for (const assignment of assignments) {
+                    const slotKey = `${assignment.mealType}:${assignment.dayOfWeek}`;
+                    if (seenSlots.has(slotKey)) {
+                        return false;
+                    }
+                    seenSlots.add(slotKey);
+                }
+
+                return true;
+            },
+        )
         .required('Assignments are required'),
 });
 
@@ -101,4 +122,23 @@ export function toMealPlanRequest(values: MealPlanFormValues): MealPlanRequest {
             dayOfWeek: assignment.dayOfWeek,
         })),
     };
+}
+
+export function canManageMealPlan(
+    mealPlan: MealPlanItem,
+    actor: { userId?: string | null; displayName?: string | null } | null,
+): boolean {
+    if (!actor) {
+        return false;
+    }
+
+    if (actor.userId && mealPlan.ownerId) {
+        return actor.userId === mealPlan.ownerId;
+    }
+
+    if (actor.displayName && mealPlan.ownerUsername) {
+        return actor.displayName === mealPlan.ownerUsername;
+    }
+
+    return false;
 }

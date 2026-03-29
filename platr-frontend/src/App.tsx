@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import './styles/App.css';
 import { Register } from './pages/Register';
+import { MealPlanDetail } from './pages/MealPlanDetail';
 import { MealPlans } from './pages/MealPlans';
 import { RecipeDetail } from './pages/RecipeDetail';
 import { Recipes } from './pages/Recipes';
@@ -24,6 +25,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/mealplans" element={<MealPlans />} />
+            <Route path="/mealplans/:id" element={<MealPlanDetail />} />
           </Route>
           <Route path="/feedback" element={<FeedbackForm />} />
         </Routes>

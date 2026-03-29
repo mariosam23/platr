@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import type { MealPlanItem } from '../../application/models/mealPlan';
+import { PlatrRoutes } from '../../application/routes';
 import { formatDate } from '../../utils/formatDate';
 import { tableCellStyle, tableHeaderStyle } from '../recipes/recipeStyles';
 
@@ -57,7 +59,9 @@ export const MealPlansTable: React.FC<MealPlansTableProps> = ({
                     ) : (
                         mealPlans.map((mealPlan) => (
                             <tr key={mealPlan.mealPlanId} style={{ borderBottom: '1px solid #2a2a2a' }}>
-                                <td style={tableCellStyle}>{formatDate(mealPlan.weekStart)}</td>
+                                <td style={tableCellStyle}>
+                                    <Link to={PlatrRoutes.MealPlans + `/${mealPlan.mealPlanId}`}>{formatDate(mealPlan.weekStart)}</Link>
+                                </td>
                                 <td style={{ ...tableCellStyle, maxWidth: 320 }}>
                                     <div
                                         style={{
@@ -74,6 +78,12 @@ export const MealPlansTable: React.FC<MealPlansTableProps> = ({
                                 <td style={tableCellStyle}>{mealPlan.createdAt ? formatDate(mealPlan.createdAt) : '-'}</td>
                                 <td style={tableCellStyle}>{mealPlan.ownerUsername}</td>
                                 <td style={{ ...tableCellStyle, whiteSpace: 'nowrap' }}>
+                                    <Link
+                                        to={PlatrRoutes.MealPlans + `/${mealPlan.mealPlanId}`}
+                                        style={{ marginRight: '0.5rem', fontSize: '0.82rem' }}
+                                    >
+                                        View
+                                    </Link>
                                     <button
                                         type="button"
                                         onClick={() => onEdit(mealPlan.mealPlanId)}

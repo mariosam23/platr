@@ -75,6 +75,12 @@ class GlobalExceptionHandler {
             .status(HttpStatus.NOT_FOUND)
             .body(buildError(HttpStatus.NOT_FOUND, ex.message ?: "Meal plan not found"))
 
+    @ExceptionHandler(DuplicateMealPlanAssignmentException::class)
+    fun handleDuplicateMealPlanAssignment(ex: DuplicateMealPlanAssignmentException): ResponseEntity<ApiErrorResponse> =
+        ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(buildError(HttpStatus.BAD_REQUEST, ex.message ?: "Duplicate meal plan assignment"))
+
     @ExceptionHandler(DataIntegrityViolationException::class)
     fun handleDuplicateKey(ex: DataIntegrityViolationException): ResponseEntity<ApiErrorResponse> =
         ResponseEntity
