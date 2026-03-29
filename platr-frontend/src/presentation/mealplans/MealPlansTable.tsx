@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { MealPlanItem, MealPlanPage } from '../../application/models/mealPlan';
+import type { MealPlanItem } from '../../application/models/mealPlan';
+import type { SpringPage } from '../../application/models/page';
 import { PlatrRoutes } from '../../application/routes';
 import { Pagination } from '../../components/Pagination';
-import { Table, tableCellStyle, tableHeaderStyle } from '../../components/Table';
+import { Table } from '../../components/Table';
 import { formatDate } from '../../utils/formatDate';
 
 interface MealPlansTableProps {
     mealPlans: MealPlanItem[];
-    page: MealPlanPage | null | undefined;
+    page: SpringPage<MealPlanItem> | null | undefined;
     isFetching: boolean;
     onEdit: (mealPlanId: string) => void;
     onDelete: (mealPlan: MealPlanItem) => void;
@@ -27,12 +28,12 @@ export const MealPlansTable: React.FC<MealPlansTableProps> = ({
         <Table isDimmed={isFetching}>
             <thead>
                 <tr>
-                    <th style={tableHeaderStyle}>Week Start</th>
-                    <th style={tableHeaderStyle}>Notes</th>
-                    <th style={tableHeaderStyle}>Meals Count</th>
-                    <th style={tableHeaderStyle}>Created At</th>
-                    <th style={tableHeaderStyle}>Owner</th>
-                    <th style={tableHeaderStyle}>Actions</th>
+                    <th>Week Start</th>
+                    <th>Notes</th>
+                    <th>Meals Count</th>
+                    <th>Created At</th>
+                    <th>Owner</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,22 +46,22 @@ export const MealPlansTable: React.FC<MealPlansTableProps> = ({
                 ) : (
                     mealPlans.map((mealPlan) => (
                         <tr key={mealPlan.mealPlanId}>
-                            <td style={tableCellStyle}>
-                                <Link className="table-primary-link" to={PlatrRoutes.MealPlans + `/${mealPlan.mealPlanId}`}>
+                            <td>
+                                <Link className="table-primary-link" to={PlatrRoutes.MealPlanDetail.replace(':id', mealPlan.mealPlanId)}>
                                     {formatDate(mealPlan.weekStart)}
                                 </Link>
                             </td>
-                            <td style={tableCellStyle}>
+                            <td>
                                 <div className="table-note" title={mealPlan.notes}>
                                     {mealPlan.notes}
                                 </div>
                             </td>
-                            <td style={tableCellStyle}>{mealPlan.recipes.length}</td>
-                            <td style={tableCellStyle}>{mealPlan.createdAt ? formatDate(mealPlan.createdAt) : '-'}</td>
-                            <td style={tableCellStyle}>{mealPlan.ownerUsername}</td>
-                            <td style={tableCellStyle} className="table-actions-cell">
+                            <td>{mealPlan.recipes.length}</td>
+                            <td>{mealPlan.createdAt ? formatDate(mealPlan.createdAt) : '-'}</td>
+                            <td>{mealPlan.ownerUsername}</td>
+                            <td className="table-actions-cell">
                                 <div className="table-action-group">
-                                    <Link className="app-button app-button-subtle app-button-small" to={PlatrRoutes.MealPlans + `/${mealPlan.mealPlanId}`}>
+                                    <Link className="app-button app-button-subtle app-button-small" to={PlatrRoutes.MealPlanDetail.replace(':id', mealPlan.mealPlanId)}>
                                         View
                                     </Link>
                                     <button

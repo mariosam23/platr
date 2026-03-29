@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { store } from '../store/store';
 import { setCredentials, logout } from '../store/authSlice';
-import { APIEndpoint, APIResponse } from '../utils/constants';
+import { APIEndpoint } from '../utils/constants';
 
 const API_BASE_URL = 'http://localhost:9023';
-const RETRYABLE_AUTH_STATUSES = new Set([APIResponse.UNAUTHORIZED, 403]);
+const RETRYABLE_AUTH_STATUSES = new Set([401, 403]);
 
 type RetryableRequestConfig = {
     _retry?: boolean;

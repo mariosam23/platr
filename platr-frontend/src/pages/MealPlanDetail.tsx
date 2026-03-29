@@ -10,7 +10,7 @@ import {
 } from '../application/models/mealPlan';
 import { PlatrRoutes } from '../application/routes';
 import { ConfirmModal } from '../components/ConfirmModal';
-import { Table, tableCellStyle, tableHeaderStyle } from '../components/Table';
+import { Table } from '../components/Table';
 import { useAppSelector } from '../hooks/useAppStore';
 import { MealPlanFormModal } from '../presentation/mealplans/MealPlanFormModal';
 import {
@@ -183,16 +183,16 @@ export const MealPlanDetail: React.FC = () => {
                 <Table tableStyle={{ minWidth: 760 }}>
                         <thead>
                             <tr>
-                                <th style={tableHeaderStyle}>Meal Type</th>
+                                <th>Meal Type</th>
                                 {DAY_OF_WEEK_OPTIONS.map((day) => (
-                                    <th key={day} style={tableHeaderStyle}>{dayLabels[day]}</th>
+                                    <th key={day}>{dayLabels[day]}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {MEAL_TYPE_OPTIONS.map((mealType) => (
                                 <tr key={mealType}>
-                                    <th style={{ ...tableHeaderStyle, whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+                                    <th style={{ whiteSpace: 'nowrap', verticalAlign: 'top' }}>
                                         {mealTypeLabels[mealType]}
                                     </th>
                                     {DAY_OF_WEEK_OPTIONS.map((day) => {
@@ -201,7 +201,7 @@ export const MealPlanDetail: React.FC = () => {
                                         );
 
                                         return (
-                                            <td key={day} style={{ ...tableCellStyle, minWidth: 130 }}>
+                                            <td key={day} style={{ minWidth: 130 }}>
                                                 {assignment ? (
                                                     <div className="app-form-stack">
                                                         <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>

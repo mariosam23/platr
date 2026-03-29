@@ -1,13 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '../store/store';
 import { logout } from '../store/authSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/useAppStore';
 import '../styles/NavBar.css';
 
 const NavBar = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { token, user } = useSelector((state: RootState) => state.auth);
+    const { token, user } = useAppSelector((state) => state.auth);
     const isAuthenticated = !!token;
 
     const handleLogout = () => {

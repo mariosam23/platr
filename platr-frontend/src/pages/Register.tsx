@@ -43,21 +43,16 @@ export const Register: React.FC = () => {
             dispatch(setCredentials({ token: tokens.jwtToken, refreshToken: tokens.refreshToken }));
             navigate(PlatrRoutes.Recipes);
         } catch (error) {
-            const fieldMap: Record<string, keyof RegisterFormData> = {
-                username: 'username',
-                email: 'email',
-                password: 'password',
-            };
             const fieldErrors = getApiFieldErrors(error);
+            const formFields: Array<keyof RegisterFormData> = ['username', 'email', 'password'];
 
             let hadFieldError = false;
-            Object.entries(fieldErrors).forEach(([field, message]) => {
-                const formField = fieldMap[field];
-                if (formField) {
-                    setError(formField, { message });
+            for (const field of formFields) {
+                if (fieldErrors[field]) {
+                    setError(field, { message: fieldErrors[field] });
                     hadFieldError = true;
                 }
-            });
+            }
 
             if (!hadFieldError) {
                 setServerError(getApiErrorMessage(error, 'Registration failed. Please try again.'));

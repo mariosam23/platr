@@ -1,6 +1,6 @@
 import * as yup from 'yup';
-import type { SpringPage } from './page';
 import type { components } from '../../types/api';
+export { canManage as canManageRecipe } from './page';
 
 export type RecipeDifficulty = components['schemas']['RecipeRequest']['difficulty'];
 export type RecipeRequest = components['schemas']['RecipeRequest'];
@@ -44,8 +44,6 @@ export interface RecipeDetailItem extends RecipeSummaryItem {
     createdAt: string | null;
     updatedAt: string | null;
 }
-
-export interface RecipeListPage extends SpringPage<RecipeSummaryItem> {}
 
 export interface RecipeListFilters {
     page: number;
@@ -164,23 +162,4 @@ export function toRecipeRequest(values: RecipeFormValues): RecipeRequest {
         })),
         categoryIds: values.categoryIds,
     };
-}
-
-export function canManageRecipe(
-    recipe: RecipeSummaryItem,
-    actor: { userId?: string | null; displayName?: string | null } | null,
-): boolean {
-    if (!actor) {
-        return false;
-    }
-
-    if (actor.userId && recipe.ownerId) {
-        return actor.userId === recipe.ownerId;
-    }
-
-    if (actor.displayName && recipe.ownerUsername) {
-        return actor.displayName === recipe.ownerUsername;
-    }
-
-    return false;
 }

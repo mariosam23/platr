@@ -1,6 +1,6 @@
 import * as yup from 'yup';
-import type { SpringPage } from './page';
 import type { components } from '../../types/api';
+export { canManage as canManageMealPlan } from './page';
 
 export type DayOfWeek = components['schemas']['MealPlanRecipeAssignmentRequest']['dayOfWeek'];
 export type MealType = components['schemas']['MealPlanRecipeAssignmentRequest']['mealType'];
@@ -24,8 +24,6 @@ export interface MealPlanItem {
     createdAt: string | null;
     updatedAt: string | null;
 }
-
-export interface MealPlanPage extends SpringPage<MealPlanItem> {}
 
 export interface MealPlanFormAssignment {
     recipeId: string;
@@ -114,23 +112,4 @@ export function toMealPlanRequest(values: MealPlanFormValues): MealPlanRequest {
             dayOfWeek: assignment.dayOfWeek,
         })),
     };
-}
-
-export function canManageMealPlan(
-    mealPlan: MealPlanItem,
-    actor: { userId?: string | null; displayName?: string | null } | null,
-): boolean {
-    if (!actor) {
-        return false;
-    }
-
-    if (actor.userId && mealPlan.ownerId) {
-        return actor.userId === mealPlan.ownerId;
-    }
-
-    if (actor.displayName && mealPlan.ownerUsername) {
-        return actor.displayName === mealPlan.ownerUsername;
-    }
-
-    return false;
 }

@@ -3,21 +3,19 @@ import type {
     IngredientOption,
     RecipeDetailItem,
     RecipeListFilters,
-    RecipeListPage,
     ReviewResponse,
     RecipeRequest,
     RecipeSummaryItem,
 } from '../application/models/recipe';
-import type { ReviewRequest } from '../application/models/review';
-import { APIEndpoint } from '../utils/constants';
-import type { components } from '../types/api';
 import { RECIPE_PAGE_SIZE } from '../application/models/recipe';
+import { normalizeSpringPage, type SpringPage } from '../application/models/page';
+import type { ReviewRequest } from '../application/models/review';
+import type { components } from '../types/api';
+import { APIEndpoint } from '../utils/constants';
 import axiosInstance from './axiosInstance';
 
 function normalizeRecipeSummary(recipe: components['schemas']['RecipeSummaryDto']): RecipeSummaryItem | null {
-    if (!recipe.recipeId) {
-        return null;
-    }
+    if (!recipe.recipeId) return null;
 
     return {
         recipeId: recipe.recipeId,
@@ -35,116 +33,57 @@ function normalizeRecipeSummary(recipe: components['schemas']['RecipeSummaryDto'
 }
 
 function normalizeRecipeDetail(recipe: components['schemas']['RecipeDetailDto']): RecipeDetailItem {
-    if (!recipe.recipeId) {
-        throw new Error('Recipe response did not include an id.');
-    }
+    const base = normalizeRecipeSummary(recipe);
+    if (!base) throw new Error('Recipe response did not include an id.');
 
     return {
-        recipeId: recipe.recipeId,
-        title: recipe.title ?? 'Untitled recipe',
-        description: recipe.description ?? '',
-        prepTimeMinutes: recipe.prepTimeMinutes ?? null,
-        difficulty: recipe.difficulty ?? null,
-        avgRating: recipe.avgRating ?? null,
-        imageUrl: recipe.imageUrl ?? null,
-        calories: recipe.calories ?? null,
-        ownerId: recipe.ownerId ?? null,
-        ownerUsername: recipe.ownerUsername ?? null,
-        categoryTypes: recipe.categoryTypes ?? [],
+        ...base,
         ingredients:
-            recipe.ingredients?.flatMap((ingredient) => {
-                if (!ingredient.ingredientId) {
-                    return [];
-                }
-
-                return [
-                    {
+            recipe.ingredients?.flatMap((ingredient) =>
+                ingredient.ingredientId
+                    ? [{
                         ingredientId: ingredient.ingredientId,
                         ingredientName: ingredient.ingredientName ?? 'Unknown ingredient',
                         quantity: ingredient.quantity ?? null,
                         unit: ingredient.unit ?? null,
-                    },
-                ];
-            }) ?? [],
+                    }]
+                    : [],
+            ) ?? [],
         reviews: recipe.reviews ?? [],
         createdAt: recipe.createdAt ?? null,
         updatedAt: recipe.updatedAt ?? null,
     };
 }
 
-function normalizeCategories(categories: components['schemas']['CategoryDto'][]): CategoryOption[] {
-    return categories.flatMap((category) => {
-        if (!category.categoryId || !category.categoryType) {
-            return [];
-        }
-
-        return [
-            {
-                categoryId: category.categoryId,
-                categoryType: category.categoryType,
-            },
-        ];
-    });
+function normalizeCategories(data: components['schemas']['CategoryDto'][]): CategoryOption[] {
+    return data.flatMap((c) =>
+        c.categoryId && c.categoryType
+            ? [{ categoryId: c.categoryId, categoryType: c.categoryType }]
+            : [],
+    );
 }
 
-function normalizeIngredients(ingredients: components['schemas']['IngredientDto'][]): IngredientOption[] {
-    return ingredients.flatMap((ingredient) => {
-        if (!ingredient.ingredientId || !ingredient.name) {
-            return [];
-        }
-
-        return [
-            {
-                ingredientId: ingredient.ingredientId,
-                name: ingredient.name,
-                unitHint: ingredient.unitHint ?? null,
-            },
-        ];
-    });
+function normalizeIngredients(data: components['schemas']['IngredientDto'][]): IngredientOption[] {
+    return data.flatMap((i) =>
+        i.ingredientId && i.name
+            ? [{ ingredientId: i.ingredientId, name: i.name, unitHint: i.unitHint ?? null }]
+            : [],
+    );
 }
 
-function normalizeRecipePage(
-    page: components['schemas']['PageRecipeSummaryDto'],
-    fallbackPageNumber: number,
-): RecipeListPage {
-    const content = (page.content ?? []).flatMap((recipe) => {
-        const normalized = normalizeRecipeSummary(recipe);
-        return normalized ? [normalized] : [];
-    });
-
-    return {
-        content,
-        totalPages: page.totalPages ?? 0,
-        totalElements: page.totalElements ?? 0,
-        size: page.size ?? RECIPE_PAGE_SIZE,
-        number: page.number ?? fallbackPageNumber,
-        first: page.first ?? fallbackPageNumber === 0,
-        last: page.last ?? false,
-        empty: page.empty ?? content.length === 0,
-    };
-}
-
-export async function fetchRecipes(filters: RecipeListFilters): Promise<RecipeListPage> {
+export async function fetchRecipes(filters: RecipeListFilters): Promise<SpringPage<RecipeSummaryItem>> {
     const params: Record<string, string | number> = {
         page: filters.page,
         size: filters.size ?? RECIPE_PAGE_SIZE,
     };
     const search = filters.search?.trim();
 
-    if (search) {
-        params.search = search;
-    }
-
-    if (filters.categoryId) {
-        params.category = filters.categoryId;
-    }
-
-    if (filters.ingredientIds?.length) {
-        params.ingredientIds = filters.ingredientIds.join(',');
-    }
+    if (search) params.search = search;
+    if (filters.categoryId) params.category = filters.categoryId;
+    if (filters.ingredientIds?.length) params.ingredientIds = filters.ingredientIds.join(',');
 
     const { data } = await axiosInstance.get<components['schemas']['PageRecipeSummaryDto']>(APIEndpoint.RECIPES, { params });
-    return normalizeRecipePage(data, filters.page);
+    return normalizeSpringPage(data, normalizeRecipeSummary, filters.page, RECIPE_PAGE_SIZE);
 }
 
 export async function fetchRecipeOptions(limit = 100): Promise<RecipeSummaryItem[]> {

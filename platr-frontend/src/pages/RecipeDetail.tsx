@@ -13,7 +13,6 @@ import {
     fetchRecipeDetail,
     updateRecipe,
 } from '../services/recipeService';
-import '../styles/App.css';
 import { getApiErrorMessage } from '../utils/apiErrors';
 import { formatDate } from '../utils/formatDate';
 

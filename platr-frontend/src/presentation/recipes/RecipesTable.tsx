@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { PlatrRoutes } from '../../application/routes';
-import type { RecipeListPage, RecipeSummaryItem } from '../../application/models/recipe';
+import type { RecipeSummaryItem } from '../../application/models/recipe';
+import type { SpringPage } from '../../application/models/page';
 import { Pagination } from '../../components/Pagination';
-import { Table, tableCellStyle, tableHeaderStyle } from '../../components/Table';
+import { Table } from '../../components/Table';
 import { difficultyBadgeStyle } from './recipeStyles';
 
 interface RecipesTableProps {
     recipes: RecipeSummaryItem[];
-    page: RecipeListPage | null | undefined;
+    page: SpringPage<RecipeSummaryItem> | null | undefined;
     isFetching: boolean;
     canManage: (recipe: RecipeSummaryItem) => boolean;
     onEdit: (recipeId: string) => void;
@@ -29,13 +30,13 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
         <Table isDimmed={isFetching}>
             <thead>
                 <tr>
-                    <th style={tableHeaderStyle}>Title</th>
-                    <th style={tableHeaderStyle}>Difficulty</th>
-                    <th style={tableHeaderStyle}>Prep Time</th>
-                    <th style={tableHeaderStyle}>Calories</th>
-                    <th style={tableHeaderStyle}>Rating</th>
-                    <th style={tableHeaderStyle}>Categories</th>
-                    <th style={tableHeaderStyle}>Actions</th>
+                    <th>Title</th>
+                    <th>Difficulty</th>
+                    <th>Prep Time</th>
+                    <th>Calories</th>
+                    <th>Rating</th>
+                    <th>Categories</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +49,7 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
                 ) : (
                     recipes.map((recipe) => (
                         <tr key={recipe.recipeId}>
-                            <td style={{ ...tableCellStyle, fontWeight: 500 }}>
+                            <td style={{ fontWeight: 500 }}>
                                 <Link
                                     to={PlatrRoutes.RecipeDetail.replace(':id', recipe.recipeId)}
                                     className="table-primary-link"
@@ -56,24 +57,18 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
                                     {recipe.title}
                                 </Link>
                             </td>
-                            <td style={tableCellStyle}>
+                            <td>
                                 <span style={difficultyBadgeStyle(recipe.difficulty)}>
                                     {recipe.difficulty ?? '-'}
                                 </span>
                             </td>
-                            <td style={tableCellStyle}>
-                                {recipe.prepTimeMinutes != null ? `${recipe.prepTimeMinutes} min` : '-'}
-                            </td>
-                            <td style={tableCellStyle}>
-                                {recipe.calories != null ? `${recipe.calories} kcal` : '-'}
-                            </td>
-                            <td style={tableCellStyle}>
-                                {recipe.avgRating != null ? `* ${recipe.avgRating.toFixed(1)}` : '-'}
-                            </td>
-                            <td style={tableCellStyle} className="table-cell-muted">
+                            <td>{recipe.prepTimeMinutes != null ? `${recipe.prepTimeMinutes} min` : '-'}</td>
+                            <td>{recipe.calories != null ? `${recipe.calories} kcal` : '-'}</td>
+                            <td>{recipe.avgRating != null ? `* ${recipe.avgRating.toFixed(1)}` : '-'}</td>
+                            <td className="table-cell-muted">
                                 {recipe.categoryTypes.length > 0 ? recipe.categoryTypes.join(', ') : '-'}
                             </td>
-                            <td style={tableCellStyle} className="table-actions-cell">
+                            <td className="table-actions-cell">
                                 {canManage(recipe) ? (
                                     <div className="table-action-group">
                                         <button

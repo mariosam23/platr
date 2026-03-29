@@ -1,6 +1,7 @@
-import type { MealPlanItem, MealPlanPage, MealPlanRequest } from '../application/models/mealPlan';
-import type { components } from '../types/api';
+import type { MealPlanItem, MealPlanRequest } from '../application/models/mealPlan';
 import { MEAL_PLAN_PAGE_SIZE } from '../application/models/mealPlan';
+import { normalizeSpringPage, type SpringPage } from '../application/models/page';
+import type { components } from '../types/api';
 import { APIEndpoint } from '../utils/constants';
 import axiosInstance from './axiosInstance';
 
@@ -16,53 +17,27 @@ function normalizeMealPlan(mealPlan: components['schemas']['MealPlanDto']): Meal
         ownerId: mealPlan.ownerId ?? null,
         ownerUsername: mealPlan.ownerUsername,
         recipes:
-            mealPlan.recipes?.flatMap((recipe) => {
-                if (!recipe.recipeId || !recipe.recipeTitle || !recipe.mealType || !recipe.dayOfWeek) {
-                    return [];
-                }
-
-                return [
-                    {
+            mealPlan.recipes?.flatMap((recipe) =>
+                recipe.recipeId && recipe.recipeTitle && recipe.mealType && recipe.dayOfWeek
+                    ? [{
                         mealPlanRecipeId: recipe.mealPlanRecipeId ?? null,
                         recipeId: recipe.recipeId,
                         recipeTitle: recipe.recipeTitle,
                         mealType: recipe.mealType,
                         dayOfWeek: recipe.dayOfWeek,
-                    },
-                ];
-            }) ?? [],
+                    }]
+                    : [],
+            ) ?? [],
         createdAt: mealPlan.createdAt ?? null,
         updatedAt: mealPlan.updatedAt ?? null,
     };
 }
 
-function normalizeMealPlanPage(page: components['schemas']['PageMealPlanDto'], fallbackPageNumber: number): MealPlanPage {
-    const content = (page.content ?? []).flatMap((mealPlan) => {
-        const normalized = normalizeMealPlan(mealPlan);
-        return normalized ? [normalized] : [];
-    });
-
-    return {
-        content,
-        totalPages: page.totalPages ?? 0,
-        totalElements: page.totalElements ?? 0,
-        size: page.size ?? MEAL_PLAN_PAGE_SIZE,
-        number: page.number ?? fallbackPageNumber,
-        first: page.first ?? fallbackPageNumber === 0,
-        last: page.last ?? false,
-        empty: page.empty ?? content.length === 0,
-    };
-}
-
-export async function fetchMealPlans(page: number): Promise<MealPlanPage> {
+export async function fetchMealPlans(page: number): Promise<SpringPage<MealPlanItem>> {
     const { data } = await axiosInstance.get<components['schemas']['PageMealPlanDto']>(APIEndpoint.MEALPLANS, {
-        params: {
-            page,
-            size: MEAL_PLAN_PAGE_SIZE,
-        },
+        params: { page, size: MEAL_PLAN_PAGE_SIZE },
     });
-
-    return normalizeMealPlanPage(data, page);
+    return normalizeSpringPage(data, normalizeMealPlan, page, MEAL_PLAN_PAGE_SIZE);
 }
 
 export async function fetchMealPlanDetail(id: string): Promise<MealPlanItem> {
