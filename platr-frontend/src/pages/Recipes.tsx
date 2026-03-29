@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { canManageRecipe, type RecipeRequest, type RecipeSummaryItem } from '../application/models/recipe';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { useAppSelector } from '../hooks/useAppStore';
@@ -16,6 +16,8 @@ import {
 } from '../services/recipeService';
 import { getApiErrorMessage } from '../utils/apiErrors';
 
+const SEARCH_INPUT_DEBOUNCE_MS = 300;
+
 export const Recipes: React.FC = () => {
     const qc = useQueryClient();
     const user = useAppSelector((state) => state.auth.user);
@@ -30,7 +32,7 @@ export const Recipes: React.FC = () => {
     const [editTargetId, setEditTargetId] = useState<string | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<RecipeSummaryItem | null>(null);
 
-    const { data: categories = [] } = useQuery({
+    const { data: categories = [], isLoading: isLoadingCategories, isError: isCategoriesError } = useQuery({
         queryKey: ['categories'],
         queryFn: fetchCategories,
         staleTime: Infinity,
@@ -44,7 +46,6 @@ export const Recipes: React.FC = () => {
                 search,
                 categoryId: selectedCategoryId || undefined,
             }),
-        placeholderData: keepPreviousData,
     });
 
     const { data: editTargetDetail, isFetching: isFetchingEdit } = useQuery({
@@ -112,6 +113,17 @@ export const Recipes: React.FC = () => {
 
     const recipes = data?.content ?? [];
 
+    useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            const normalizedSearch = searchInput.trim();
+
+            setPage((currentPage) => (currentPage === 0 ? currentPage : 0));
+            setSearch((currentSearch) => (currentSearch === normalizedSearch ? currentSearch : normalizedSearch));
+        }, SEARCH_INPUT_DEBOUNCE_MS);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [searchInput]);
+
     const openAddModal = () => {
         setPageError(null);
         setPageNotice(null);
@@ -131,8 +143,10 @@ export const Recipes: React.FC = () => {
     };
 
     const commitSearch = () => {
+        const normalizedSearch = searchInput.trim();
+
         setPage(0);
-        setSearch(searchInput.trim());
+        setSearch(normalizedSearch);
     };
 
     const clearFilters = () => {
@@ -173,6 +187,8 @@ export const Recipes: React.FC = () => {
                 hasActiveFilters={Boolean(search || selectedCategoryId)}
                 isFetching={isFetching}
                 isLoading={isLoading}
+                isLoadingCategories={isLoadingCategories}
+                isCategoriesError={isCategoriesError}
                 onSearchInputChange={setSearchInput}
                 onCommitSearch={commitSearch}
                 onCategoryChange={(categoryId) => {

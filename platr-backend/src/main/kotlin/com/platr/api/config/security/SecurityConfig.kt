@@ -33,7 +33,13 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/recipes", "/api/recipes/**")
                     .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/categories", "/api/ingredients")
+                    .requestMatchers(
+                        HttpMethod.GET,
+                        "/api/categories",
+                        "/api/categories/**",
+                        "/api/ingredients",
+                        "/api/ingredients/**",
+                    )
                     .permitAll()
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                     .permitAll()

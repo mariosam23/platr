@@ -64,7 +64,18 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
                             </td>
                             <td>{recipe.prepTimeMinutes != null ? `${recipe.prepTimeMinutes} min` : '-'}</td>
                             <td>{recipe.calories != null ? `${recipe.calories} kcal` : '-'}</td>
-                            <td>{recipe.avgRating != null ? `* ${recipe.avgRating.toFixed(1)}` : '-'}</td>
+                            <td>
+                                {recipe.avgRating != null ? (
+                                    <span className="table-rating" aria-label={`Rated ${recipe.avgRating.toFixed(1)} out of 5`}>
+                                        <span className="table-rating__star" aria-hidden="true">
+                                            ★
+                                        </span>
+                                        <span className="table-rating__value">{recipe.avgRating.toFixed(1)}</span>
+                                    </span>
+                                ) : (
+                                    '-'
+                                )}
+                            </td>
                             <td className="table-cell-muted">
                                 {recipe.categoryTypes.length > 0 ? recipe.categoryTypes.join(', ') : '-'}
                             </td>

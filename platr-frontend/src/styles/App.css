@@ -251,6 +251,23 @@
   color: var(--color-text-muted);
 }
 
+.table-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.table-rating__star {
+  color: #f4c95d;
+  text-shadow: 0 0 12px rgba(244, 201, 93, 0.24);
+  line-height: 1;
+}
+
+.table-rating__value {
+  font-variant-numeric: tabular-nums;
+}
+
 .table-actions-cell {
   white-space: nowrap;
 }

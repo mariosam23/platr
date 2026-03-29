@@ -8,6 +8,8 @@ interface RecipeFiltersProps {
     hasActiveFilters: boolean;
     isFetching: boolean;
     isLoading: boolean;
+    isLoadingCategories: boolean;
+    isCategoriesError: boolean;
     onSearchInputChange: (value: string) => void;
     onCommitSearch: () => void;
     onCategoryChange: (categoryId: string) => void;
@@ -21,6 +23,8 @@ export const RecipeFilters: React.FC<RecipeFiltersProps> = ({
     hasActiveFilters,
     isFetching,
     isLoading,
+    isLoadingCategories,
+    isCategoriesError,
     onSearchInputChange,
     onCommitSearch,
     onCategoryChange,
@@ -28,15 +32,11 @@ export const RecipeFilters: React.FC<RecipeFiltersProps> = ({
 }) => (
     <div className="filter-bar">
         <input
+            type="search"
             className="filter-bar__control"
             placeholder="Search recipes..."
             value={searchInput}
             onChange={(event) => onSearchInputChange(event.target.value)}
-            onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                    onCommitSearch();
-                }
-            }}
         />
         <button type="button" className="app-button" onClick={onCommitSearch}>
             Search
@@ -44,9 +44,16 @@ export const RecipeFilters: React.FC<RecipeFiltersProps> = ({
         <select
             className="filter-bar__control filter-bar__control--compact"
             value={selectedCategoryId}
+            disabled={isLoadingCategories || isCategoriesError || categories.length === 0}
             onChange={(event) => onCategoryChange(event.target.value)}
         >
-            <option value="">All categories</option>
+            <option value="">
+                {isCategoriesError
+                    ? 'Categories unavailable'
+                    : isLoadingCategories
+                      ? 'Loading categories...'
+                      : 'All categories'}
+            </option>
             {categories.map((category) => (
                 <option key={category.categoryId} value={category.categoryId}>
                     {category.categoryType}
