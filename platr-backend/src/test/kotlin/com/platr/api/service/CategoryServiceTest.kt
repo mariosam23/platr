@@ -4,7 +4,6 @@ import com.platr.api.entity.Category
 import com.platr.api.enums.CategoryType
 import com.platr.api.repository.CategoryRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
@@ -29,7 +28,6 @@ class CategoryServiceTest {
         val result = categoryService.getAllCategories()
 
         // Assert
-        assertNotNull(result)
         assertEquals(2, result.size)
 
         assertEquals(categoryId1, result[0].categoryId)

@@ -3,7 +3,6 @@ package com.platr.api.service
 import com.platr.api.entity.Ingredient
 import com.platr.api.repository.IngredientRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
@@ -25,7 +24,6 @@ class IngredientServiceTest {
         val result = ingredientService.searchIngredients(null)
 
         // Assert
-        assertNotNull(result)
         assertEquals(1, result.size)
         assertEquals(ingredientId1, result[0].ingredientId)
         assertEquals("Tomato", result[0].name)
@@ -45,7 +43,6 @@ class IngredientServiceTest {
         val result = ingredientService.searchIngredients(searchString)
 
         // Assert
-        assertNotNull(result)
         assertEquals(1, result.size)
         assertEquals(ingredientId1, result[0].ingredientId)
         assertEquals("Roma Tomato", result[0].name)

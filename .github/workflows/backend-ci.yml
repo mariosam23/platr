@@ -57,8 +57,5 @@ jobs:
       - name: Run ktlint
         run: ./gradlew ktlintCheck
       
-      - name: Run Spring Boot tests
-        run: ./gradlew check
-      
-      - name: Build and package
-        run: ./gradlew build -x test
+      - name: Build and test
+        run: ./gradlew build
