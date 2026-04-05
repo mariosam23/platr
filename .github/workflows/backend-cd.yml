@@ -1,0 +1,23 @@
+name: platr Backend CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'platr-backend/**'
+
+  # Allows manual triggers
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Deploy to PaaS (e.g., Render / Koyeb)
+        run: |
+          echo "Triggering deployment webhook..."
+          # Replace 'DEPLOY_HOOK_URL' in your repository secrets with the 
+          # generated webhook URL from Render, Railway, or Koyeb.
+          curl -X POST -d {} ${{ secrets.DEPLOY_HOOK_URL }}

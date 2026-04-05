@@ -6,8 +6,10 @@ build/
 !**/src/test/**/build/
 project.md
 .env
+*cred*
 
 *.ps1
+
 *.postman*
 
 ### STS ###

@@ -1,0 +1,36 @@
+name: platr Frontend CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'platr-frontend/**'
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: platr-frontend
+        
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './platr-frontend/package-lock.json'
+          
+      - name: Install dependencies
+        run: npm ci || npm install
+        
+      - name: Run ESLint
+        run: npm run lint
+        
+      - name: Build frontend
+        run: npm run build
