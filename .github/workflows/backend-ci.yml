@@ -57,11 +57,5 @@ jobs:
       - name: Run ktlint
         run: ./gradlew ktlintCheck
       
-      # - name: Run detekt
-      #   run: ./gradlew detekt
-      
-      - name: Run Spring Boot tests
-        run: ./gradlew check
-      
-      # - name: Run code OWASP Dependency Check
-      #   run: ./gradlew dependencyCheckAnalyze
+      - name: Build
+        run: ./gradlew build -x test

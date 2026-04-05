@@ -1,0 +1,24 @@
+name: platr Backend CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'platr-backend/**'
+
+  # manual triggers
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Deploy to PaaS (e.g., Render / Koyeb)
+        run: |
+          echo "Triggering deployment webhook..."
+          curl --fail-with-body -X POST \
+            -H 'Content-Type: application/json' \
+            --data '{}' \
+            '${{ secrets.DEPLOY_HOOK_URL }}'
