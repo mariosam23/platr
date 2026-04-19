@@ -31,7 +31,7 @@ class MealPlan(
     @JoinColumn(name = "user_id", nullable = false)
     var owner: User,
     @OneToMany(mappedBy = "mealPlan", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val mealPlanRecipes: MutableList<MealPlanRecipe> = mutableListOf(),
+    var mealPlanRecipes: MutableList<MealPlanRecipe> = mutableListOf(),
 ) : AuditedEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
