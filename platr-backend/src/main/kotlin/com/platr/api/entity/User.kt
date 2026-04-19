@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.util.UUID
 
@@ -40,6 +41,8 @@ class User(
     var mealPlans: MutableList<MealPlan> = mutableListOf(),
     @OneToMany(mappedBy = "owner", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     var reviews: MutableList<Review> = mutableListOf(),
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var profile: UserProfile? = null,
 ) : AuditedEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
