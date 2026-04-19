@@ -7,6 +7,7 @@ import com.platr.api.dto.response.RecipeSummaryDto
 import com.platr.api.dto.response.ReviewResponse
 import com.platr.api.service.RecipeService
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -34,7 +35,7 @@ class RecipeController(
         @RequestParam(required = false) search: String?,
         @RequestParam(required = false) category: String?,
         @RequestParam(required = false) ingredientIds: String?,
-        pageable: Pageable,
+        @ParameterObject pageable: Pageable,
     ): ResponseEntity<Page<RecipeSummaryDto>> {
         val filters = mutableMapOf<String, String>()
         if (!category.isNullOrBlank()) {
