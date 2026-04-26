@@ -19,7 +19,7 @@ jobs:
       ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
       ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
       POSTGRES_PASSWORD: test-postgres-password
-      JWT_SECRET: test-jwt-secret
+      JWT_SECRET: "test-jwt-secret-key-for-ci-environment-minimum-256-bits"
       ADMIN_PASSWORD: test-admin-password
 
     services:
