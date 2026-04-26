@@ -23,7 +23,7 @@ class Category(
     @Enumerated(EnumType.STRING)
     var categoryType: CategoryType,
     @OneToMany(mappedBy = "category", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
-    val recipes: MutableList<RecipeCategory> = mutableListOf(),
+    var recipes: MutableList<RecipeCategory> = mutableListOf(),
 ) : AuditedEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

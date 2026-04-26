@@ -46,7 +46,7 @@ class Recipe(
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
     var reviews: MutableList<Review> = mutableListOf(),
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.PERSIST, CascadeType.MERGE], orphanRemoval = true)
-    val categories: MutableList<RecipeCategory> = mutableListOf(),
+    var categories: MutableList<RecipeCategory> = mutableListOf(),
 ) : AuditedEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

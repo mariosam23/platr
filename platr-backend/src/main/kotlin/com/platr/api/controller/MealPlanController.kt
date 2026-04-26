@@ -4,6 +4,7 @@ import com.platr.api.dto.request.MealPlanDto
 import com.platr.api.dto.request.MealPlanRequest
 import com.platr.api.service.MealPlanService
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -29,7 +30,7 @@ class MealPlanController(
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getMealPlans(
         authentication: Authentication,
-        pageable: Pageable,
+        @ParameterObject pageable: Pageable,
     ): Page<MealPlanDto> = mealPlanService.getUserMealPlans(authentication.name, pageable)
 
     @GetMapping("/{id}")
