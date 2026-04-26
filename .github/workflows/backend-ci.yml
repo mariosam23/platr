@@ -14,11 +14,11 @@ jobs:
     env:
       POSTGRES_USER: postgres
       POSTGRES_DB: platr_backend_ci
-      DB_URL: postgresql://postgres:test-postgres-password@localhost:5432/platr_backend_ci
+      DB_URL: jdbc:postgresql://localhost:5432/platr_backend_ci
       ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
       ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
       POSTGRES_PASSWORD: test-postgres-password
-      JWT_SECRET: test-jwt-secret
+      JWT_SECRET: test-jwt-secret-that-is-at-least-thirty-two-characters-long
       ADMIN_PASSWORD: test-admin-password
 
     services:
@@ -57,5 +57,8 @@ jobs:
       - name: Run ktlint
         run: ./gradlew ktlintCheck
       
+      - name: Run tests
+        run: ./gradlew test
+      
       - name: Build
-        run: ./gradlew build -x test
+        run: ./gradlew build
