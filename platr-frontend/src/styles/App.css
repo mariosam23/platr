@@ -72,10 +72,10 @@
 }
 
 .app-button-primary {
-  border-color: rgba(79, 142, 247, 0.45);
+  border-color: color-mix(in srgb, var(--color-primary) 45%, transparent);
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
   color: #ffffff;
-  box-shadow: 0 14px 32px rgba(79, 142, 247, 0.24);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 
 .app-button-primary:hover {
@@ -215,7 +215,7 @@
 }
 
 .data-table tbody tr:hover {
-  background: rgba(79, 142, 247, 0.06);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .data-table th {
@@ -259,9 +259,15 @@
 }
 
 .table-rating__star {
-  color: #f4c95d;
-  text-shadow: 0 0 12px rgba(244, 201, 93, 0.24);
+  display: inline-flex;
+  align-items: center;
+  color: #e8b86a;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, #e8b86a 35%, transparent));
   line-height: 1;
+}
+
+.table-rating__star svg {
+  display: block;
 }
 
 .table-rating__value {
@@ -308,10 +314,10 @@
 }
 
 .pagination__button--current {
-  border-color: rgba(79, 142, 247, 0.45);
-  background: linear-gradient(135deg, rgba(79, 142, 247, 0.94), rgba(58, 123, 232, 0.92));
+  border-color: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
   color: #ffffff;
-  box-shadow: 0 12px 28px rgba(79, 142, 247, 0.24);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--color-primary) 26%, transparent);
 }
 
 .modal-overlay {
@@ -455,7 +461,7 @@
 }
 
 .app-search-result:hover {
-  background: rgba(79, 142, 247, 0.1);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
 .app-search-result-meta {

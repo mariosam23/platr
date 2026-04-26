@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { PlatrRoutes } from '../application/routes';
 import { logout } from '../store/authSlice';
 import { useAppDispatch, useAppSelector } from '../hooks/useAppStore';
 import '../styles/NavBar.css';
@@ -20,9 +21,10 @@ const NavBar = () => {
                 <Link to="/">Plat<span>r</span></Link>
             </div>
             <ul className="navbar-links">
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/recipes">Recipes</Link></li>
-                <li><Link to="/mealplans">Meal Plans</Link></li>
+                <li><Link to={PlatrRoutes.Home}>Home</Link></li>
+                <li><Link to={PlatrRoutes.Recipes}>Recipes</Link></li>
+                <li><Link to={PlatrRoutes.MealPlans}>Meal Plans</Link></li>
+                <li><Link to={PlatrRoutes.Reviews}>Reviews</Link></li>
                 
                 {!isAuthenticated ? (
                     <>

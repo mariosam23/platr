@@ -10,6 +10,7 @@ import { MealPlans } from './pages/MealPlans';
 import { RecipeDetail } from './pages/RecipeDetail';
 import { Recipes } from './pages/Recipes';
 import { Register } from './pages/Register';
+import { Reviews } from './pages/Reviews';
 import './styles/App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                         <Route path={PlatrRoutes.RecipeDetail} element={<RecipeDetail />} />
                         <Route path={PlatrRoutes.MealPlans} element={<MealPlans />} />
                         <Route path={PlatrRoutes.MealPlanDetail} element={<MealPlanDetail />} />
+                        <Route path={PlatrRoutes.Reviews} element={<Reviews />} />
                     </Route>
                 </Routes>
             </div>

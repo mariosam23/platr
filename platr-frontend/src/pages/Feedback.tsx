@@ -66,6 +66,7 @@ export const Feedback: React.FC = () => {
 			await Promise.all([
 				queryClient.invalidateQueries({ queryKey: ['recipes'] }),
 				queryClient.invalidateQueries({ queryKey: ['recipeDetail', values.recipeId] }),
+				queryClient.invalidateQueries({ queryKey: ['userPostedReviews'] }),
 			]);
 			reset(createReviewFormValues(values.recipeId));
 			navigate(PlatrRoutes.RecipeDetail.replace(':id', values.recipeId));

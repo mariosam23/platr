@@ -140,3 +140,68 @@ export async function addRecipeReview(id: string, body: ReviewRequest): Promise<
     const { data } = await axiosInstance.post<components['schemas']['ReviewResponse']>(`${APIEndpoint.RECIPES}/${id}/reviews`, body);
     return data;
 }
+
+export interface UserPostedReviewRow {
+    recipeId: string;
+    recipeTitle: string;
+    review: ReviewResponse;
+}
+
+const USER_REVIEWS_DETAIL_CONCURRENCY = 6;
+
+async function mapWithConcurrency<T, R>(items: T[], concurrency: number, fn: (item: T) => Promise<R>): Promise<R[]> {
+    if (items.length === 0) return [];
+    const results: R[] = new Array(items.length);
+    let nextIndex = 0;
+
+    async function worker() {
+        for (;;) {
+            const i = nextIndex;
+            if (i >= items.length) return;
+            nextIndex += 1;
+            results[i] = await fn(items[i]);
+        }
+    }
+
+    const pool = Math.min(concurrency, items.length);
+    await Promise.all(Array.from({ length: pool }, () => worker()));
+    return results;
+}
+
+/** Loads all recipe pages and each recipe detail; filters reviews by owner. For large catalogs, prefer a dedicated API. */
+export async function fetchUserPostedReviews(userId: string): Promise<UserPostedReviewRow[]> {
+    const trimmed = userId.trim();
+    if (!trimmed) return [];
+
+    const summaries: RecipeSummaryItem[] = [];
+    let page = 0;
+    for (;;) {
+        const batch = await fetchRecipes({ page, size: RECIPE_PAGE_SIZE });
+        summaries.push(...batch.content);
+        if (batch.last || batch.empty) break;
+        page += 1;
+    }
+
+    const details = await mapWithConcurrency(summaries, USER_REVIEWS_DETAIL_CONCURRENCY, (s) => fetchRecipeDetail(s.recipeId));
+
+    const rows: UserPostedReviewRow[] = [];
+    for (const detail of details) {
+        for (const review of detail.reviews) {
+            if (review.ownerId === trimmed) {
+                rows.push({
+                    recipeId: detail.recipeId,
+                    recipeTitle: detail.title,
+                    review,
+                });
+            }
+        }
+    }
+
+    rows.sort((a, b) => {
+        const ta = a.review.createdAt ? Date.parse(a.review.createdAt) : 0;
+        const tb = b.review.createdAt ? Date.parse(b.review.createdAt) : 0;
+        return tb - ta;
+    });
+
+    return rows;
+}

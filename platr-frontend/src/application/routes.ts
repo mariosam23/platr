@@ -7,4 +7,5 @@ export const PlatrRoutes = {
     MealPlans: "/mealplans",
     MealPlanDetail: "/mealplans/:id",
     Feedback: "/feedback",
+    Reviews: "/reviews",
 };

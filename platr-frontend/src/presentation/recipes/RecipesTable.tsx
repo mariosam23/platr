@@ -5,6 +5,7 @@ import type { RecipeSummaryItem } from '../../application/models/recipe';
 import type { SpringPage } from '../../application/models/page';
 import { Pagination } from '../../components/Pagination';
 import { Table } from '../../components/Table';
+import { IconRatingStar } from '../../components/icons/FeatureIcons';
 import { difficultyBadgeStyle } from './recipeStyles';
 
 interface RecipesTableProps {
@@ -68,7 +69,7 @@ export const RecipesTable: React.FC<RecipesTableProps> = ({
                                 {recipe.avgRating != null ? (
                                     <span className="table-rating" aria-label={`Rated ${recipe.avgRating.toFixed(1)} out of 5`}>
                                         <span className="table-rating__star" aria-hidden="true">
-                                            ★
+                                            <IconRatingStar />
                                         </span>
                                         <span className="table-rating__value">{recipe.avgRating.toFixed(1)}</span>
                                     </span>

@@ -12,7 +12,7 @@
     border: 1px solid var(--color-border);
     border-radius: 28px;
     background:
-        linear-gradient(160deg, rgba(79, 142, 247, 0.1), transparent 28%),
+        linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 28%),
         var(--color-surface-strong);
     box-shadow: var(--color-shadow);
 }

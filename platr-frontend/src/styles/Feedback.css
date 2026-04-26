@@ -13,7 +13,7 @@
     padding: 1.5rem 1.75rem;
     border: 1px solid var(--color-border);
     border-radius: 24px;
-    background: linear-gradient(135deg, rgba(79, 142, 247, 0.16), transparent 45%), var(--color-surface-strong);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 45%), var(--color-surface-strong);
     box-shadow: var(--color-shadow);
 }
 
@@ -97,7 +97,7 @@
 
 .feedback-radio-label input,
 .feedback-checkbox-label input {
-    accent-color: var(--color-primary, #4f8ef7);
+    accent-color: var(--color-primary);
     cursor: pointer;
 }
 
